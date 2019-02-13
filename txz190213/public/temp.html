@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <script src="http://code.jquery.com/jquery-1.11.1.min.js"></script>
+</head>
+<body>
+<input type="button" id="bt1">
+<input type="button" id="bt2">
+
+<div id="wrap">
+    <p id="p1" style="border:1px solid red; width:100px; height:50px;">헬로우</p>
+</div>
+<script>
+$("#bt1").click((e)=>{
+    $("#p1").remove();
+})
+
+
+// $("#bt1").click(()=>{
+//     $("#wrap").prepend("버튼1 클릭 push1");
+//     history.pushState({data:"abc"},"", "/push1")
+// })
+// $("#bt2").click(()=>{
+//     $("#wrap").prepend("버튼2 클릭 replace1");
+//     history.replaceState({data:"abc"},"", "/replace1")
+// })
+// history.replaceState({data:"abc"},"", "push1")
+</script>
+<!-- <style>
+.page{border:2px solid green; width:400px; height:150px; 
+    background:rgba(242,242,242,1); top:0;
+    }
+#page1{border:2px solid red}
+#page2{border:2px solid orange}
+#page3{border:2px solid yellow}
+.btns{background:green; padding:5px;}
+</style>
+
+<h2 id="start">시작</h2>
+
+<div id="page1" class="page">
+    페이지1
+    <input type="button" class="btns" id="page1next" value="next toPage2">
+</div>
+<div id="page2" class="page">
+    페이지2
+    <input type="button" class="btns" id="page2prev" value="prev toPage1">
+    <input type="button" class="btns" id="page2next" value="next toPage3">
+</div>
+<div id="page3" class="page">
+    페이지3
+    <input type="button" class="btns" id="page3prev" value="prev toPage2">
+</div>
+<script>
+var i;
+
+// $("#start").click(function(e){
+//     $("#page1").css("display", "none")    
+//     history.pushState({page:'page1', data:i+"번"},"",'/page1')
+//     i++
+// })
+history.pushState({"page":"page0", data:i+"번"}, "" ); 
+
+var i=1;
+$("#page1").click(function(e){
+    $("#page1").append("<p>페이지1+++</p>")
+    history.pushState({"page":"page1", data:i+"번"}, "", "/page1"); 
+    console.log("After history.state.page : " + history.state.page)
+    console.log("After history.state.data : " + history.state.data)
+    console.log("history.length : ", history.length)
+    console.log("===================================================")
+    i++;
+})
+$("#page2").click(function(e){
+    $("#page2").append("<p>페이지222</p>")
+    
+    console.log("history.state.page : " + history.state.page)
+    console.log("history.state.data : " + history.state.data)
+    history.pushState({"page":"page2", data:i+"번"}, "", "/page2")
+    console.log("After history.state.page : " + history.state.page)
+    console.log("After history.state.data : " + history.state.data)
+    console.log("history.length : ", history.length)
+    console.log("==================================================="); 
+    i++;
+})
+$("#page3").click(function(e){
+    console.log("history.state.page : " + history.state.page)
+    console.log("history.state.data : " + history.state.data)
+    history.replaceState({"page":"page3", data:i+"번"}, "", "/page3"); 
+    console.log("After history.state.page : " + history.state.page)
+    console.log("After history.state.data : " + history.state.data)
+    console.log("history.length : ", history.length)
+    console.log("==================================================="); 
+    i++;
+})
+window.onpopstate = function(e){
+    alert("esp : " + e.state.page + "data : "+ e.state.data)
+}
+
+// window.onpopstate = function(e){
+//     if(e.state.page=="page1"){
+//         alert("e.state.data : " + e.state.data);
+//         $("#page1").append(e.state.data);
+//     }
+// }
+</script> -->
+
+</body>
+</html>

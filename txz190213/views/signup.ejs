@@ -1,0 +1,142 @@
+
+<script src="//cdnjs.cloudflare.com/ajax/libs/jquery.form/3.51/jquery.form.min.js"></script>
+<style>
+#signup_content_wrap{margin:0 auto; width:300px; padding:15px;
+}
+
+#signup_title{height:30px; margin:10px 0}
+#signup_form .text_input_p{width:100%; height:40px; margin:8px 0; position:relative;
+    height:40px; margin:8px 0 12px;}
+#signup_form .text_input{width:90%; padding:7px 0; border:none; 
+    outline:1px solid rgba(192,192,192,1); 
+    text-indent:8px; font-size:15px; color:rgba(69,69,69,1);}
+.signup_item{font-size:15px; color:rgba(69,69,69,1);}
+#gender_selection_box{height:40px; margin:8px 0; position:relative;
+    height:40px; margin:8px 0}
+.gender_option{display:inline-block; position:relative; width:90px; }
+.gender_option_label{position: absolute; left: 20px;}
+#signup_submit{width:100%; height:40px; border:0px; background-color:rgba(7,173,132,1); 
+    font-size:16px; outline:1px solid rgba(7,173,132,1); color:white; margin-top:12px;}
+#imgPreview{width: 80px; height: 80px; border-radius:40px; }
+</style>
+<div id="signup_content_wrap">
+    <h3 id="signup_title">회원가입</h3>
+    <form method="post" action="" id="signup_form" enctype="multipart/form-data">
+        
+            <p class="signup_item">핸드폰</p>
+            <p class="text_input_p">
+               
+                <input type="text" class="text_input" name="phone" value="01012341234" >
+            </p>
+            <p class="signup_item">비밀번호</p>
+            <p class="text_input_p">            
+                <input type="text" class="text_input"  name="password" value="1234">
+            </p>
+       
+            <p class="signup_item">이름</p>
+            <p class="text_input_p">
+                <input type="text" class="text_input" name="username" value="uname">
+            </p>
+            <p class="signup_item">성별</p>
+                <div id="gender_selection_box">
+                    <p class="gender_option">
+                        <input type="radio" name="gender" value="남" id="gender_m">
+                        <label for="gender_m" class="gender_option_label">남성</label>
+                    </p>
+                    <p class="gender_option">
+                        <input type="radio" name="gender" value="여" id="gender_fm">
+                        <label for="gender_fm" class="gender_option_label">여성</label>
+                    </p>
+                </div>
+            </p>
+      
+      
+            <p class="signup_item">이메일</p>
+            <p class="text_input_p">
+                <input type="text" class="text_input" name="email" value="email@">
+            </p>
+            </p>
+        
+            <p class="signup_item">프로필이미지</p>
+            <div style="text-align:center;">
+                <canvas id="canvas" style="width:100px;height:100px;border-radius:80px; border:1px solid red">
+                </canvas>
+            </div>
+            <input type="file" id="profile_image" name="profile_image">
+            <input type="hidden" id="profileImageData" name="profileImageData">
+        <input type="button" id="signup_submit" value="확인">
+    </form>
+</div>
+
+<script>
+
+var canvas=document.getElementById("canvas");    
+var originalFile; 
+var fileInput = document.getElementById("profile_image");
+var imgUrl;
+fileInput.addEventListener('change', function (e) {
+    console.log("this.value : " + this.value);
+    console.log("e.target")
+    console.dir(e.target)
+    var imgUrl;
+    var fileSelected = e.target.files[0];
+    var reader = new FileReader();
+    var canvas = document.getElementById("canvas");
+    reader.readAsDataURL(fileSelected);
+    reader.addEventListener('load', function(){
+        var img = new Image();
+        img.onload = function(){
+            console.log("img onload") 
+            canvas.width = 100;
+            canvas.height = 100;
+            var ctx = canvas.getContext("2d");
+            var ow = img.width;
+            var oh = img.height;
+            var nh, nw, ratio, xPos, yPos;
+            if(ow>=oh){
+                ratio = 100/oh
+                nw = ow*ratio; nh = oh*ratio;
+                xPos = (100-nw)/2
+                console.log("xPos:",xPos)
+                ctx.drawImage(img, xPos, 0, nw,nh)
+                imgUrl = canvas.toDataURL("image/png")
+                var profileImageInput = document.getElementById("profileImageData");
+                console.log(imgUrl);
+                profileImageInput.value = imgUrl
+
+            }else{
+                ratio = 100/ow
+                nw = ow*ratio; nh = oh*ratio;
+                yPos = (100-nh)/2
+                console.log("yPos:",yPos)
+                ctx.drawImage(img, 0, yPos, nw,nh)     
+                imgUrl = canvas.toDataURL("image/png")                    
+                console.log(imgUrl);
+                var profileImageInput = document.getElementById("profileImageData");
+                profileImageInput.value = imgUrl
+            }
+        }
+        img.src = reader.result;
+    });
+});
+
+$(function(){  //이거 안하면 jquery form 플러그인 로드 전에 아래 코드 읽어서 문제생김??
+    $('#signup_submit').click(function(e){
+        console.log('signup_submit submit 내부 함수 시작')
+        e.preventDefault();
+        $("#signup_form").ajaxSubmit({
+            url:'/signup'
+            ,contentType: 'application/json'
+            ,success: function(loginEjs){
+                console.log("signupform ajaxsubmit 처리 success cb - loginEjs 받아오기 성공")
+                $("#wrap").html(loginEjs);
+            }
+        });
+        // return false;  //????
+    });
+});
+ 
+
+</script>
+
+

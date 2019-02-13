@@ -1,0 +1,187 @@
+
+
+*{margin:0; padding:0; list-style:none}
+
+#wrap{position: relative; height:100vh;}
+.placeSearchWrap, .placeSearchWrapInPosting{width:100%; height:100vh; 
+    position:absolute; top:0; background-color:#fff;;}
+.placeSearchWrap{z-index:200;}
+.placeSearchWrapInPosting{z-index:11000}
+#postingWrap{width:100%; height:100vh; position:absolute; top:0px;left:0px;
+    background:#fff; z-index:10005}
+
+#postJoinViewWrap{position:absolute; top:0; left:0; z-index:111111; background-color:#fff; 
+    width:100%; background-color:rgba(246,246,246,1);height:100vh}
+    
+#postingSuccessWrap{width:100%; background-color:#fff; height:100vh; 
+    position:absolute; top:0; left:0; z-index:111111
+};
+.floatIcon{z-index:1000}
+#postingIcon{z-index:10000}
+#chatIcon{z-index:10001}
+
+#contentsBox{position:relative; width:100%;} 
+#postlistBox{z-index:1;}
+
+
+#chatWrap{background-color:rgba(236,242,247,1); z-index:222222; position:absolute;top:0;left:0; 
+    width:100%;height:100vh; }
+
+
+.subWrapHeader{height:40px;position:relative; }
+.backIcon{padding:5px; transform: rotate(180deg); height: 24px; margin: 3px 5px;}
+
+/* 메인페이지 */
+#menubarIcon{position: absolute; top: 10px; right: 11px; width: 27px; height: 29px;}
+#logoutBox{position: absolute; display:inline-block; display:none;
+    top: 50px; right: 10px; border: 1px solid rgba(122,122,122,1); font-size: 13px;
+    padding: 5px; background: white; box-shadow:1px 1px gray; border-radius:3px;}
+
+/* 메인페이지의 맵 출력 (basic.js showCurPos함수) */
+#map{width:100%;height:300px;position:relative;overflow:hidden}
+.infoWindowBox{width:230px; padding:5px;}
+.infoWindowBox .title{font-weight:bold; display:block; font-family:"gulim"; font-size:13px;}
+.infoWindowBox .addrItem{font-size:12px;padding:5px 0}
+
+/* topSearchWrap 출발지 목적지 검색창 영역*/
+.topSearchBox{position:relative; padding:5px;}
+#mainSearchForm{padding-right:38px; }
+.placeInput{background-color:rgba(246,246,246,1); padding: 8px; font-size:13px; 
+    margin:3px; border:1px solid rgba(212,212,212,1); width:90%}
+/* ======== 메인페이지 끝 ============ */
+
+
+.floatIcon{ /* 우하단 포스팅, 채팅 아이콘 */
+    width:40px;height:40px;border-radius:20px;border:1px solid rgba(169,169,169,1); 
+    border:1px solid rgba(30,78,125,0.7); position:fixed; bottom:25px;right:25px; 
+    background-color:rgba(255,255,255,0.9); font-weight:bold;font-size:11px; text-align:center; 
+    line-height:40px; box-shadow: 2px 1.5px lightblue;;
+}
+
+
+/* 출발지 목적지 검색레이어페이지 (메인페이지(index.html)에서의 검색 + 포스팅페이지에서의 검색) */
+ /* index.ejs 기본 */
+.placeSearchTitle, .placeSearchTitleInPosting{
+    font-size: 14px; margin: 5px 10px 10px 8px; 
+    font-family: 'gulim'; font-weight: bold;}
+.placeSearchInput, .placeSearchInputInPosting{
+    border:1px solid rgba(212,212,212,1); 
+    padding: 8px; font-size:13px; margin:3px 5px; width:90%;}
+.placeResultBox, .placeResultBoxInPosting{background:#fff;}
+
+/* basic.js placeSearchHandler 에서 삽입 */
+.place_item{ position: relative; padding: 5px 5px 10px 5px;  /* li태그 */
+    border-bottom: 1px solid rgba(236,236,236,1);}
+.itemInListInfo{padding-left:38px}   /* li태그 내 랩퍼박스 */
+.spreadMapIcon{position:absolute; top:16px; left:14px;  width: 19px;}
+.jibun_addr{font-size:13px;}
+.placenameInList{font-weight:bold; font-family:'나눔고딕', 'dotum'; font-size:12px; 
+    margin:2px;  display:inline-block; width:77%; line-height:165%;}
+.distanceInList{position:absolute; z-index:100; top:10px; right:10px}
+
+/* 최근검색 basic.js recentSearchHandler 에서 삽입 */
+.recentPlaceItem{padding:7px 16px; border-bottom:2px solid rgba(242,242,242,1);
+    vertical-align:middle;} 
+.recentPlaceDate{color:rgba(128,128,128,1);font-size:12px; 
+    text-align:right; margin:2px; display:inline-block;width:20%;}
+
+/*============= 장소검색리스트 출력 끝  ==================*/
+
+
+/* 포스트검색결과 출력영역 postlist.js */
+#postlistBox{position:absolute; top:0; background:#fff; width:100%; display:none;min-height:350px;}
+#departSpotIcon{position:absolute; top:11px; left:15px; width:15px;}
+#arriveSpotIcon{position:absolute; top:11px; left:15px; width:14px;}
+
+#noResultInfoBox{text-align: center;margin-top:15px;}
+#noResultInfoMessage{  height: 95px; line-height: 95px;
+    font-size: 20px; color: darkblue;}
+#frustrationImg{width:150px;}
+.itemLiElInPostlist{margin:5px 0}   
+.itemLiElInPostlist p{padding:6px 8px; font-family:"나눔고딕", "gulim"}
+.NumberOfParticipantLimit, .NumberOfParticipants{width:15px;}
+.postInfoInList{padding:8px; border-top:1px solid rgba(212,212,212,1)}
+.ridersNum{font-size:17px;}
+.curParticipants{font-size:11px;}
+
+.postItemInList{margin:0 6px;}
+.itemKey{font-size: 12px; font-weight: bold; color:rgba(92,92,92,1); position: relative; top:-3px;}
+.itemVal{font-size:15px; font-family:"dotum"; margin:0 5px;}
+.joinButton{color:#fff; background-color:rgba(7,173,132,1); width:100%;
+    text-align:center; font-size:15px; height:40px; line-height:40px;
+}
+.itemVal2{font-size:13px;}
+.locationInfo{position: relative; }
+.locationInPostlist{font-weight: bold; font-family: '나눔고딕', 'dotum'; font-size: 14px;
+    margin: 2px; display: inline-block; width: 77%; line-height: 165%;
+}
+/* ============================= */
+
+
+
+/* 포스팅페이지  index.ejs 파일에 존재 */
+
+#postingForm {position: relative;margin:10px}
+.locationBoxInPosting{position: relative; width: 100%; padding-right:10px;}
+
+.placenameInPosting{background-color:rgba(246,246,246,1); border:1px solid rgba(212,212,212,1);
+    width:90%; margin:3px; padding: 8px; font-size:13px; 
+}
+tr td{vertical-align:middle}
+.locationSepTr{text-align:center; font-size: 13px;
+    font-weight: bold; color: rgba(92,92,92,1); }
+#arriveBoxInPosting{margin-bottom:10px;}
+.postingItemInnerBox{position: relative; margin:10px;}
+.postingItemInnerBox input{border:1px solid rgba(216,216,216,1); width:100%;
+    box-sizing: border-box; padding:10px}
+.postingItemTitle{font-size: 13px; font-weight: bold; color:rgba(92,92,92,1); 
+    position: relative; top:-3px; left:9px; width:100%;}
+.postingItemBox{padding-bottom:5px;}
+.dropdownIcon{position: absolute; width: 24px; top: 10px; right: 21px;}
+#postingMessage{border:none; height:40px;border:1px solid rgba(216,216,216,1);
+    height:70p;}
+#postingSubmitBox{margin:10px}
+#posting_submit{color:#fff; background-color:rgba(7,173,132,1); width:100%;
+    text-align:center; font-size:15px; height:40px; line-height:40px;
+    border:none}
+/*=========포스팅페이지 끝===========*/
+
+
+
+/*참여중인 방 상단 삽입 배너 */
+#postJoinSum{width:100%; background-color:rgba(247,247,247,1); 
+    outline:1px solid rgba(212,212,212,1); font-size:13px; position:relative;
+    font-family:'gulim'; font-weight:bold; padding:14px 0;}
+#postJoinMarker{color:green; 
+    display:inline-block;position:absolute;width:46px; font-size:14px; top:13px; left:9px
+} 
+#postSumFromTo{padding:0 50px 0 60px; line-height:15px;}
+
+#participantNumberInJoinSummary{position:absolute; font-size:14px; color:darkblue; top:14px; right:16px;}
+/* 참여중인 방 상단 삽입 배너 끝 */
+
+
+/* 참여중인 포스트정보 페이지, basic.js printPostInfoPage()에서 삽입 */
+#postJoinView{padding:0.5rem; position:relative; }
+.postJoinViewItem{font-size:13px; font-size: 0.9rem; margin:14px 0;
+    font-family:"나눔고딕", "dotum"; font-weight: bold; margin: 15px 5px; color:rgba(78,78,78,1)}
+.postItemName{    display: inline-block;
+    width: 68px; color: rgba(119,119,119,1);}
+#cancel{    text-align: right;
+    border: 1px solid rgba(212,212,212,1); color:red;padding:3px 7px; font-size:13px;
+    display: inline-block; margin-top:5px;}
+/* ========== 포스트정보페이지 끝 =========== */
+
+
+/*포스팅 완료페이지  posting.js processPosting()에서 삽입 */
+
+#postingSuccessBox{width: 100%; padding: 0; margin:0 auto; text-align:center;}
+#postingSuccesInfoBox{ margin: 0 auto; width: 85%;}
+#postSuccessMessage{text-align:center; height:80px; font-size:20px; font-weight:bold;text-align:center;
+ color:rgba(7,173,132,1); line-height:80px;}
+.postSuccessItem{font-size:13px; font-weight:bold;margin:6px;}
+
+#postingSuccessConfirm{ font-size: 20px; color:white; margin-top:12px;
+    padding: 10px; background-color: rgba(7,173,132,1); width: 100px; margin:20px auto;
+    text-align: center;border-radius: 5px; }
+

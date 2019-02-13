@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <script src="http://code.jquery.com/jquery-1.11.1.min.js"></script>
+    <script src='https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.0.4/socket.io.js'></script>
+    <link rel="stylesheet" href="/css/common.css" />
+    <link rel="stylesheet" href="/css/chat.css" />
+</head>
+<body>
+
+<div id="wrap">
+</div>
+<script src='https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.0.4/socket.io.js'></script>
+
+<script>
+console.log('index.html page') 
+var authToken = localStorage.getItem('x-access-token');
+if(authToken){
+    loadIndex(authToken);
+    
+}else{
+    loadLogin();
+}
+
+function loadIndex(authToken){
+    console.log("loadIndex 실행 - authToken : " + authToken);
+    $.ajax({
+        url:'/index'
+        ,headers:{"x-access-token" :"Bearer " + authToken}
+        ,method:'get'
+        ,success:function(indexEjs){
+            console.log("get indexEjs success cb 실행");
+            $("#wrap").html(indexEjs);
+            history.replaceState({page:'home'}, "", "/index.html");    //ejs파일을 state의 데이터에 넣을 수 있나?
+        
+        }
+        ,error:function(err){
+            console.log('ajax err(indexejs) : ' + JSON.stringify(err));
+        }
+    });    
+}
+
+function loadLogin(){
+    $.ajax({
+        url:'/login'
+        ,success:function(loginEjs){
+            $("#wrap").html(loginEjs);
+            history.replaceState({page:'login'}, "", "/login");    
+            //ejs파일을 state의 데이터에 넣을 수 있나?
+        }
+        ,error:function(err){
+            console.log('ajax err(loginejs) : ' + JSON.stringify(err));
+        }
+    });
+}
+
+// function processSignup(){
+//     $.ajax({
+//         url:'/signup'
+//         ,method:"POST"
+//         ,data: $("#signup_form").serializeArray()
+//         ,success:function(loginEjs){
+//             console.log("processSignup 포스트 처리 성공. insert loginEjs in wrap");
+//             $("#wrap").html(loginEjs);
+//             //히스토리 전체 초기화 ??         
+//         }
+//         ,error:function(err){
+//             console.log("processSignup처리 실패");
+//             $("#wrap").html(err);
+//         }
+//     })
+// }
+
+function processLogin(){
+    console.log('로그인 클릭');
+    $.ajax({
+        url:'/login'
+        ,method:"POST"
+        ,data:$("#login_form").serializeArray()
+        ,success:function(data){
+            console.log('processLogin ajax success - data : ' + JSON.stringify(data));
+            localStorage.setItem("x-access-token", data.token);
+            var token = data.token;
+            var userOid = parseJwt(token).user_oid;
+            console.log("userOid : " + userOid);
+            localStorage.setItem("user_oid", userOid);
+            console.log("localStorage.getItem('user_oid') : " + localStorage.getItem('user_oid'));
+            
+            localStorage.setItem("username", data.username);
+            console.log("localStorage setItem username 추가 data.username : " + data.username );
+            //히스토리 스택 0로 만들기  //deleteAll?
+            // window.history.go(-(history.length-1));
+            console.log("parseJwt(token).user_oid : " + parseJwt(token).user_oid);
+            loadIndex(token);
+        }
+        ,error:function(err){
+            $("#wrap").html(err);
+        }
+    });
+}
+
+function loadAuthPhone(){
+    $.ajax({
+        url : '/auth_phone'
+        ,method : 'get'
+        ,success:function(authPhoneEjs){
+            console.log('ajax get authPhoneEjs success');
+            $("#wrap").html(authPhoneEjs);
+            window.history.pushState({page:'auth_phone'}, '', '/auth_phone');
+        }
+    });
+}
+
+function processPhoneAuth(){
+    $.ajax({
+        url:'/auth_phone'
+        ,method:"POST"
+        ,data:$("#phone_auth_form").serializeArray()
+        ,success:function(signupEjs){   
+            console.log('/auth_phone POST 처리 success; data : signupEjs');
+            $("#wrap").html(signupEjs);
+            // console.log('pageFrom : ' + pageFrom);   // pageFrom : 'auth_phone' 
+            window.history.pushState({page:'signup'}, "Title1", "/signup");
+            // pageOn = history.state.page;
+        }
+        ,error:function(err){
+            $("#wrap").html(err);
+        }
+    });
+}
+
+function parseJwt(token) {
+    var base64Url = token.split('.')[1];
+    var base64 = base64Url.replace('-', '+').replace('_', '/');
+    return JSON.parse(window.atob(base64));
+};
+</script>
+
+<!-- <script src="/js/basic.js"></script>
+<script src="/js/posting.js"></script>  -->
+
+<!-- // $("head").append("<script src='https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.0.4/socket.io.js'></script>");
+// $("head").append("<script src='/js/handle_socket.js'></script>"); -->
+
+</body>
+</html>

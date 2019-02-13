@@ -1,0 +1,27 @@
+
+#chatInnerWrap{height:100%; position:relative; height:100vh;}
+#chatlist{
+    height:calc(100vh - 100px); overflow:scroll;
+}
+#messageInputBox{position:fixed; bottom:10px; width:100%;}
+#messageInput{height: 34px; width: 75%; border:1px solid rgba(207,207,207,1)}
+#sendMessage{background-color: rgba(7,173,132,1);
+    position: absolute; top: 0; right: 10px; width: 20%; z-index: 3;
+    border: none; height: 37px; }
+.profile{width:46px;height:46px;}
+.messageListItem{position:relative; padding:8px 0}
+.userInfo{position:absolute; 
+    width:70px; margin:5px; text-align:center;}
+.profileImage{display:block; margin:0 auto; width:46px; height:46px; border-radius:23px;}
+.senderName{font-size:13px; padding: 6px;}
+.sent_at{padding-left:5px; margin:5px; font-size:14px; }
+
+.messageInfo{ padding-left:68px; max-width: 65%;}
+.get_message{margin:5px; padding:10px 12px ; background:#fff; font-size:14px; line-height:150%;
+    box-shadow: 1.5px 1.5px rgba(200,212,200,1); border-radius:15px; }
+
+.echoMessageBox{text-align:right;}
+.echoMessageBox .sent_at{margin:0 25px 10px;}
+.my_message{ display: inline-block; max-width: 75%; margin:10px;
+    box-shadow: 1.5px 1.5px rgba(200,212,200,1);
+    text-align: left; }

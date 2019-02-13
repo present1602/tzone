@@ -1,0 +1,86 @@
+
+<!-- posts:results -->
+
+
+<!-- <div id="postlistBox">	 -->
+
+
+    <ul id="postlist">
+    <% if (posts.length>0){    
+        showList() 
+    }else{ %>
+        <div id="noResultInfoBox">
+            <p id="noResultInfoMessage">검색결과가 없습니다</p>
+            <img src="/images/frustration.jpg" id="frustrationImg">
+        </div>
+    <%}%>  
+    </ul>
+<% function showList(){ %>
+    <% for (var i = 0; i < posts.length; i++) {
+    var writerObjId = posts[i]._doc.writer;  
+    var writerName = posts[i]._doc.writer_name;  
+    var writerGender = posts[i]._doc.writer_gender;  
+    
+    var postObjId = posts[i]._doc._id;
+    var depPlacename = posts[i]._doc.dep_placeinfo.placename;
+    var depRoadAddr = posts[i]._doc.dep_placeinfo.road_addr;
+    var depJibunAddr = posts[i]._doc.dep_placeinfo.jb_addr;
+    var arvPlacename = posts[i]._doc.arv_placeinfo.placename;
+    var arvRoadAddr = posts[i]._doc.arv_placeinfo.road_addr;
+    var arvJibunAddr = posts[i]._doc.arv_placeinfo.jb_addr;
+    var depLng = posts[i]._doc.dep_geometry.coordinates[0];
+    var depLat = posts[i]._doc.dep_geometry.coordinates[1];
+    var arvLng = posts[i]._doc.arv_geometry.coordinates[0];
+    var arvLat = posts[i]._doc.arv_geometry.coordinates[1];
+    var depart_time = posts[i]._doc.depart_time;
+    var participant_count = posts[i]._doc.participant_count;
+    var join_restrict = posts[i]._doc.join_restrict;
+    var message = posts[i]._doc.message;
+    console.log("depJibunAddr : " + depJibunAddr);
+    console.log("arvJibunAddr : " + arvJibunAddr);
+    console.log("depLat : " + depLat);
+    console.log("depLng : " + depLng);
+    console.log("arvLat : " + arvLat);
+    console.log("arvLng : " + arvLng);
+    %>
+    <li class="itemLiElInPostlist">
+        <!-- <a href="../view_hprpost/<%=postObjId %>"> --> 
+        <div class="locationInfo"> 
+            <p class="locationInPostlist" style="padding-left: 32px;"><%=depPlacename %></p>
+            <img src="/images/spot1_icon.gif" id="departSpotIcon" class="locationIcon">
+        </div>
+        <div class="locationInfo"> 
+            <p class="locationInPostlist" style="padding-left: 32px;"><%=arvPlacename %></p>
+            <img src="/images/spot2_icon.gif" id="arriveSpotIcon" class="locationIcon">
+        </div> 
+        <div class="postInfoInList">
+            <input type="hidden" class="post_oid" value=<%=postObjId %>> </p>
+            <!-- <p class="" style="display:block">작성자 : <%=writerObjId %></p> -->
+            
+            <p class="postItemInList departTime">
+                <span class="itemKey">탑승시간</span>
+                <span class="itemVal departTime"><%=depart_time %></span>
+            </p>
+            <p class="postItemInList currentParcieipantCount">
+                <span class="itemKey">탑승인원</span>
+                <span class="itemVal"><%=join_restrict %>명</span>
+                <span class="itemVal2">/
+                    <input class="partiCount" style="width:18px; border:none; margin-left:5px; " value=<%=participant_count %>>명 참여중
+                </span>
+            </p>
+                <!-- <span class="writerName"><%=writerName %></span>
+                <span class="writerGender"><%=writerGender %></span> -->
+            <input type="button" class="joinButton" onclick="join(event)" value="참여">
+        </div>
+            <!-- <p class="itemInPostlist">메세지 : <%=message %></p> -->
+    </li>
+    <% } %>
+<% } %> 
+<!-- </div> -->
+<script>
+
+// });
+</script>
+
+
+

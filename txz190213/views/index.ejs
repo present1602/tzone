@@ -1,0 +1,190 @@
+<!-- 
+1) 메인페이지
+2) 포스팅페이지, 
+3) 채팅페이지(wrap), 
+  출발지선택(wrap), 도착지선택(wrap), 
+  포스팅페이지의 출발지선택(wrap)과 도착지선택(wrap) -->
+ 
+<script src="//cdnjs.cloudflare.com/ajax/libs/jquery.form/3.51/jquery.form.min.js"></script>
+
+<div class="floatIcon" id="chatIcon" style="display:none">
+    <img src="/images/chatIcon1.png" style="height: 25px; margin-top: 8px">
+</div>  <!-- placeSearchWrap height:? -->
+<div class="floatIcon" id="postingIcon" style="display:none">
+    <img src="/images/write.png" style="height: 25px; margin-top: 8px">
+</div> 
+
+<div id="chatWrap" class="contentsContainer" style="display:none">
+    <div class="subWrapHeader">
+        <img id="closeChat" class="backIcon" src="/images/back.gif">
+    </div>
+    <div id="chatInnerWrap" style="position:relative;">
+        <ul id="chatlist">
+        </ul>
+        <div id="messageInputBox">
+            <input size="35" id="messageInput">  
+            <input type="button" id="sendMessage" onclick="sendMessage()" value="보내기">    
+        </div>
+    </div>
+</div>
+
+<script>
+$("#messageInput").focus(function(e){
+    e.target.value="";
+});
+</script>
+
+<div id="postingSuccessWrap" style="display:none">
+</div>
+
+<div id="postJoinViewWrap" class="contentsContainer" style="display:none;">
+</div>
+
+<div id="departSearchWrap" class="placeSearchWrap contentsContainer" style="display:none">
+    <div class="subWrapHeader">
+        <img class="backIcon" src="images/back.gif" id="closeDepartSearch">
+    </div>
+    <p class="placeSearchTitle">출발지 선택</p>
+    <input type="text" id="departSearchInput" class="placeSearchInput" 
+        onfocus=" this.value='' "value="">     
+    <div class="placeResultBox" id="departResultBox">
+    </div>                
+</div>
+
+<div id="arriveSearchWrap" class="placeSearchWrap contentsContainer" style="display:none"> 
+    <div class="subWrapHeader">
+        <img class="backIcon" src="images/back.gif" id="closeArriveSearch">
+    </div>
+    <p class="placeSearchTitle">도착지 선택</p>
+    <input type="text" id="arriveSearchInput" class="placeSearchInput" 
+        onfocus=" this.value='' " value="">
+    <div class="placeResultBox" id="arriveResultBox">
+    </div>
+</div>
+
+<div id="departSearchWrapInPosting" class="placeSearchWrapInPosting contentsContainer" style="display:none">
+    <div class="subWrapHeader">
+        <img class="backIcon"  src="images/back.gif">
+    </div>
+    <p class="placeSearchTitleInPosting">출발지 선택(posting)</p>
+    <input type="text" id="departSearchInputInPosting" class="placeSearchInputInPosting" 
+        onfocus=" this.value='' " value="">
+    <div class="placeResultBoxInPosting" id="departResultBoxInPosting">
+    </div>
+</div>
+
+<div id="arriveSearchWrapInPosting" class="placeSearchWrapInPosting contentsContainer" style="display:none">
+    <div class="subWrapHeader">
+        <img class="backIcon" id="closeArriveSearchWrapInPosting" src="images/back.gif">
+    </div>
+    <p class="placeSearchTitleInPosting">도착지 선택(posting)</p>
+    <input type="text" id="arriveSearchInputInPosting" class="placeSearchInputInPosting"  
+        onfocus=" this.value='' " value="">
+    <div class="placeResultBoxInPosting" id="arriveResultBoxInPosting">
+    </div>
+</div>
+
+<div class="topSearchBox">
+    <!-- <img src="/images/changedeparv.gif" id="reverseIcon"> -->
+    <form class="search_form" id="mainSearchForm" name="">  
+        <p id="departInputBundle" class="location_p">
+            <input type="text" id="departInput" name="departInput" class="placeInput"  value="인하대">
+            <!-- <p id="updatePos" onclick="showCurPos();">현재위치 업데이트</p> -->
+            <input type="hidden" id="departLatInMain" name="departLatInMain"  class="placeLatInMain" value="">
+            <input type="hidden" id="departLngInMain" name="departLngInMain"  class="placeLngInMain" value="">
+        </p>
+        <p id="arriveInputBundle" class="location_p">
+            <input type="text" id="arriveInput" name="arriveInput"  class="placeInput" value="도착지">
+            <!-- <img id="arrive_map_icon" class="map_icon" src="../images/map.png"> -->
+            <p id="arvSelectInMap" class="searchOnMap" style="display:none; padding:5px; text-align:center">지도에서찾기 </p>
+            <input type="hidden" id="arriveLatInMain" name="arriveLatInMain"  class="placeLatInMain" 
+                value="126.67997018">
+            <input type="hidden" id="arriveLngInMain" name="arriveLngInMain"  class="placeLngInMain" 
+                value="37.465053293">
+        </p>
+    </form>
+    <img src="/images/menubar.png" id="menubarIcon">
+    <div id="logoutBox" onclick="logout()">로그아웃</div>
+</div>   <!-- div#topSearchWrap 끝 -->
+
+<div id="contentsBox" style="position:relative;">
+    <div id="map"></div>
+    <div id="postlistBox"></div>
+</div>  
+
+<div id="postingWrap" class="contentsContainer" style="display:none;">    
+    <div class="subWrapHeader">
+        <img class="backIcon" id="closePosting" src="images/back.gif">
+    </div>
+    <form id="postingForm" name="postingForm">   
+        <table id="departBoxInPosting" class="locationBoxInPosting">
+            <tr>
+                <td class="locationSepTr"><span class="locationSep">출발</span>
+                </td>
+                <td class="tr2">
+                    <input type="text" id="departPlacename" name="departPlacename" class="placenameInPosting"  
+                    value="인하대" readonly>
+                </td>
+                <!-- <td class="tr3"><img id="depart_map_icon" class="map_icon" src="/images/map.png">
+                </td> -->
+                <input type="hidden" id="departJibunAddr" name="departJibunAddr">
+                <input type="hidden" id="departRoadAddr" name="departRoadAddr">
+                <input type="hidden" id="departLat" name="departLat">
+                <input type="hidden" id="departLng" name="departLng">
+            </tr>
+        </table>
+        <table id="arriveBoxInPosting" class="locationBoxInPosting">
+            <tr>
+                <td class="locationSepTr"><span class="locationSep">도착</span>
+                </td>
+                <td class="tr2">
+                    <input type="text" id="arrivePlacename" name="arrivePlacename" class="placenameInPosting"  
+                    value="주안역" readonly>
+                </td>
+                <!-- <td class="tr3"><img id="arrive_map_icon" class="map_icon" src="/images/map.png">
+                </td> -->
+                <input type="hidden" id="arriveJibunAddr" name="arriveJibunAddr">
+                <input type="hidden" id="arriveRoadAddr" name="arriveRoadAddr">
+                <input type="hidden" id="arriveLat" name="arriveLat">
+                <input type="hidden" id="arriveLng" name="arriveLng">
+            </tr>
+        </table>
+        <!-- 지도에서 선택도 dep arv 나눌지 -->
+ 
+        <div id="" class="postingItemBox">
+            <span id="setDepartime" class="postingItemTitle">탑승시간</span>
+            <div class="postingItemInnerBox">
+                <input type="text" name="departTime" id="departTime" value="바로 출발">
+                <img id="arrive_map_icon" class="dropdownIcon" src="/images/spreaddown.gif">
+            </div>
+        </div>
+
+        <div id="" class="postingItemBox">
+            <span id="setRiderNum" class="postingItemTitle">탑승인원</span>
+            <div class="postingItemInnerBox">
+                <input type="text" name="numLimit" id="numLimit" value="3">
+                <img id="arrive_map_icon" class="dropdownIcon" src="/images/spreaddown.gif">
+            </div>
+        </div>
+    
+        <div class="postingItemBox">
+            <!-- <p><label for="people">인원</label></p> -->
+                <!-- <input type="radio" style="width:30px;border:1px solid blue" name="numLimit" id="numLimit" value="2">2명 
+                <input type="radio" style="width:30px;border:1px solid blue" name="numLimit" id="numLimit" checked="checked" value="3">3명 -->
+            <span class="postingItemTitle">메세지(선택)</span>
+            <div class="postingItemInnerBox">
+                <input type="text" name="message" id="postingMessage" value ="메세지를 입력해주세요 ">
+            </div>
+        </div>
+        
+        <div id="postingSubmitBox">
+            <input type="button" id="posting_submit" onclick="processPosting()" value="완료">
+        </div>
+    
+    </form>
+</div>
+<script src="/js/control_pages.js"></script>
+<script src="/js/basic.js"></script>
+<script src="/js/recent_search.js"></script>
+<script src="/js/posting.js"></script>
+<script src="/js/socket_client.js"></script>

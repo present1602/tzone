@@ -1,0 +1,274 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <script src="http://code.jquery.com/jquery-1.11.1.min.js"></script>
+    <script src='https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.0.4/socket.io.js'></script>
+    <script src="/js/handle_socket.js"></script>
+<style>
+#container{position: relative;}
+*{margin:0; padding:0; list-style-type: none}
+</style>
+</head>
+<body>
+<p>Ajs 확인용 over container  <span class="login" onclick="logout()">로그아웃</span></p>
+
+<div id="container">
+
+    
+<style>
+        .map_icon{width:14px;}
+        #map{width:100%;height:300px;position:relative;overflow:hidden}
+        .location_p{width:100%; border:1p solid blue; margin:2px };
+        /* .location_input{width:260px;}; */
+        *{margin:0; padding:0;list-style-type:none}
+        
+        </style>
+        
+        <!-- placeSearchWrap height:? -->
+        <div id="departSearchWrap" class="placeSearchWrap" 
+            style="z-index:200; width:100%; height:460px; position:absolute; background-color:#fff;
+            border:1px solid red; display:none">
+            <p>출발지 선택</p>
+            <input type="text" id="departSearchInput" class="placeSearchInput" value="">
+            <div class="placeResultBox" id="departResultBox">
+                <p>최근검색 결과가 없습니다</p>
+            </div>
+        </div>
+        
+        <div id="arriveSearchWrap" class="placeSearchWrap" 
+            style="z-index:200; width:100%; height:460px; position:absolute; 
+            background-color:#fff; border:1px solid blue; display:none">
+            <p>도착지 선택</p>
+            <input type="text" id="arriveSearchInput" class="placeSearchInput"  value="">
+            <div class="placeResultBox" id="arriveResultBox">
+                <p>최근검색 결과가 없습니다</p> 
+            </div>
+        </div>
+        
+        
+        <div id="departSearchWrapInPosting" class="placeSearchWrapInPosting" 
+            style="z-index:200; width:100%; height:460px; position:absolute; background-color:#fff; border:1px solid blue; display:none">
+            <p>출발지 선택(posting)</p>
+            <input type="text" id="departSearchInputInPosting" class="placeSearchInputInPosting"  value="">
+            <div class="placeResultBoxInPosting" id="departResultBoxInPosting">
+                <p>최근검색 결과가 없습니다</p> 
+            </div>
+        </div>
+        
+        <div id="arriveSearchWrapInPosting" class="placeSearchWrapInPosting" 
+            style="z-index:200; width:100%; height:460px; position:absolute; background-color:#fff; border:1px solid blue; display:none">
+            <p>도착지 선택(posting)</p>
+            <input type="text" id="arriveSearchInputInPosting" class="placeSearchInputInPosting"  value="">
+            <div class="placeResultBoxInPosting" id="arriveResultBoxInPosting">
+                <p>최근검색 결과가 없습니다</p> 
+            </div>
+        </div>
+        
+        <div id="contentsContainer">
+            <form class="search_form" id="mainSearchForm" name="">  
+                <p id="departInputBundle" class="location_p">
+                    <input type="text" id="departInput" name="departInput" class="placeSearchInput"  value="인하대">
+                    <img id="depart_map_icon" class="map_icon" src="/images/map.png">
+                    <p id="depSelectInMap" class="selectInMap" style="display:none; padding:5px; text-align:center">지도에서찾기 </p>
+                    <p id="updatePos" onclick="showCurPos();">현재위치 업데이트</p>
+                    <input type="hidden" id="departLatInMain" name="departLatInMain"  class="placeLatInMain" value="">
+                    <input type="hidden" id="departLngInMain" name="departLngInMain"  class="placeLngInMain" value="">
+                </p>
+                <p id="arriveInputBundle" class="location_p">
+                    <input type="text" id="arriveInput" name="arriveInput"  class="placeSearchInput" value="주안역">
+                    <img id="arrive_map_icon" class="map_icon" src="../images/map.png">
+                    <p id="arvSelectInMap" class="selectInMap" style="display:none; padding:5px; text-align:center">지도에서찾기 </p>
+                    <input type="hidden" id="arriveLatInMain" name="arriveLatInMain"  class="placeLatInMain" value="">
+                    <input type="hidden" id="arriveLngInMain" name="arriveLngInMain"  class="placeLngInMain" value="">
+                </p>
+            </form>
+            
+<script>
+function connectToServer(){
+    var authToken = localStorage.getItem();
+    socket = io.connect('http://localhost:3000');
+    socket.on('connect', function(){
+        console.log('소켓 온');
+        var userPhone = parseJwt(authToken).phone;
+        socket.emit('user_on', {"user_phone" : userPhone});  
+        // socket.on('')
+        // 그냥 사용자 아이디만 전달? jwt decode 클라이언트에서는 못함. 그러면 어떻게?
+
+        // socket.emit('user_on', {userId:userHidden});
+    });
+    socket.on('disconnect', function(){
+        console.log('소켓 종료')
+    });
+};
+connectToServer();
+
+</script>
+            <!-- 방개설 or 방 join 시-->
+            <div id="postJoinWrap">
+                <p><span id="markJoin"></span> 강남역... -> 사당역... 1/3  </p>
+            </div>
+
+            <div id="contentsBox" style="position:relative;width:100%">
+            <!-- postlist ejs 시작 -->
+                <div id="postlistWrap">	
+                    <ul id="postlist">
+                        <li>
+                            <div class="content"> <!-- <a href="../view_hprpost/<%=postObjId %>"> -->
+                                <p class="">작성자 : <%=userName %></p>
+                                <p class="">출발 : <%=depPlacename %></p>
+                                <p class="">도착 : <%=arvPlacename %></p>
+                                <p class="">출발시간 : <%=depart_time %></p>
+                                <p class="">인원 : <%=join_restrict %></p>
+                                <p class="">메세지 : <%=message %></p>
+                                <p class="joinButton">참여하기</p>
+                            </div>
+                        </li>
+                        <li>
+                            <div class="content"> <!-- <a href="../view_hprpost/<%=postObjId %>"> -->
+                                <p class="">작성자 : <%=userName %></p>
+                                <p class="">출발 : <%=depPlacename %></p>
+                                <p class="">도착 : <%=arvPlacename %></p>
+                                <p class="">출발시간 : <%=depart_time %></p>
+                                <p class="">인원 : <%=join_restrict %></p>
+                                <p class="">메세지 : <%=message %></p>
+                                <p class="joinButton">참여하기</p> 
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+              <!-- postlist ejs 끝 -->
+            </div>
+        </div>
+        
+        <p id="posting" onclick="toPosting();">글쓰기</p>
+        <p id="showposttemp" onclick="processShowPosts();">포스트보기</p>
+        
+        <div id="postingWrap" style="border:1px solid green; position:absolute; top:0px;left:0px;
+            background:#fff;display:none; z-index:100">    
+            <form id="postingForm" name="postingForm">   
+                <div id="departDataGroupInPosting" style="display:block;">
+                    <p id="depart_p" class="place_p">
+                        <input type="text" id="departPlacename" name="departPlacename" class="placeSearchInput"  value="인하대">
+                        <img id="depart_map_icon" class="map_icon" src="/images/map.png">
+                    </p>
+                <!-- <div id="departListBox" style="display:none">  //ajax로 처리?
+                    <ul>
+                    </ul>  
+                </div> -->
+                    <input type="text" id="departJibunAddr" name="departJibunAddr">
+                    <input type="text" id="departRoadAddr" name="departRoadAddr">
+                    <input type="text" id="departLat" name="departLat">
+                    <input type="text" id="departLng" name="departLng">
+                </div>
+        
+                <div id="arriveDataGroupInPosting" style="display:block;">
+                    <p id="arrive_p" class="place_p">
+                        <input type="text" id="arrivePlacename" name="arrivePlacename" class="placeSearchInput"  value="주안역">
+                        <img id="arrive_map_icon" class="map_icon" src="/images/map.png">
+                    </p>
+                <!-- <div id="departListBox" style="display:none"><ul> </ul></div> -->
+               
+                    <input type="text" id="arriveJibunAddr" name="arriveJibunAddr">
+                    <input type="text" id="arriveRoadAddr" name="arriveRoadAddr">
+                    <input type="text" id="arriveLat" name="arriveLat">
+                    <input type="text" id="arriveLng" name="arriveLng">
+                </div>
+        
+                <!-- 지도에서 선택도 dep arv 나눌지 -->
+                <!-- <p id="selectInMap" style="display:none; border:1px solid blue; padding:5px; text-align:center">지도에서찾기 </p> -->
+                
+                <div id="inputItemBox">
+                    <p><label for="departTime">출발시간</label></p>
+                    <p><input type="text" name="departTime" id="departTime" value="바로 출발"></p>
+                    <div id="inputItemInnerBox">
+                        <p><label for="people">인원</label></p>
+                            <input type="radio" style="width:30px;border:1px solid blue" name="numLimit" id="numLimit" value="2">2명 
+                            <input type="radio" style="width:30px;border:1px solid blue" name="numLimit" id="numLimit" checked="checked" value="3">3명
+                        <p><label for="message">메세지(선택)</label></p>
+                        <p><input type="textarea" name="message" id="message" value ="어서 들어오세요 "></p>
+                    </div>
+                </div>
+                <input type="button" id="posting_submit" onclick="processPosting()" value="확인">
+            </form>
+        </div>
+        
+</div>
+
+
+<script src="/js/basic.js"></script>  
+<script src="/js/posting.js"></script>  
+<script>
+//아래 블록 처음 한번만 실행 어떻게? 
+//홈버튼 누를 경우 인덱스 재실행 코드 일부만 로딩하기 
+//처음부터 로컬에 저장된 파일 빼고 일부만 서버에서 받아오도록 하기
+//loadIndex loadLogin 결정 app.js에서 하기?
+  //처음 접속만 .html로. 스크립트는 남아있는데 다시 실행될 일 없음?
+//앱 처음 설치했을대는 url 다르게 시작? ex) /guide 
+function loadInitContent(){  // 
+    console.log('index.html loadInitContent 실행')
+    var authToken = localStorage.getItem('x-access-token');
+    console.log("authToken : " + authToken);
+    if(authToken){
+        loadIndex();
+    }else{
+        loadLogin();
+        
+    }
+}
+loadInitContent();
+
+</script>
+</body>
+
+</html>
+
+
+<div id="postlistWrap">	
+    <ul id="postlist">
+    <% showList() %>  
+    </ul>
+<!-- writer에 현재 전화번호만 저장돼있음 수정하기 
+writer에 ObjectId로 저장 -->
+<% function showList(){ %>
+    <% for (var i = 0; i < posts.length; i++) {
+    var userName = posts[i]._doc.writer;  
+
+    var postObjId = posts[i]._doc._id;
+    var depPlacename = posts[i]._doc.dep_placeinfo.placename;
+    var depRoadAddr = posts[i]._doc.dep_placeinfo.road_addr;
+    var depJibunAddr = posts[i]._doc.dep_placeinfo.jb_addr;
+    var arvPlacename = posts[i]._doc.arv_placeinfo.placename;
+    var arvRoadAddr = posts[i]._doc.arv_placeinfo.road_addr;
+    var arvJibunAddr = posts[i]._doc.arv_placeinfo.jb_addr;
+    var depLng = posts[i]._doc.dep_geometry.coordinates[0];
+    var depLat = posts[i]._doc.dep_geometry.coordinates[1];
+    var arvLng = posts[i]._doc.arv_geometry.coordinates[0];
+    var arvLat = posts[i]._doc.arv_geometry.coordinates[1];
+    var depart_time = posts[i]._doc.depart_time
+    var join_restrict = posts[i]._doc.join_restrict
+    var message = posts[i]._doc.message
+    console.log("depJibunAddr : " + depJibunAddr);
+    console.log("arvJibunAddr : " + arvJibunAddr);
+    console.log("depLat : " + depLat);
+    console.log("depLng : " + depLng);
+    console.log("arvLat : " + arvLat);
+    console.log("arvLng : " + arvLng);
+    %>
+    <li>
+        <div class="content"> <!-- <a href="../view_hprpost/<%=postObjId %>"> -->
+            <p class="">작성자 : <%=userName %></p>
+            <p class="">출발 : <%=depPlacename %></p>
+            <p class="">도착 : <%=arvPlacename %></p>
+            <p class="">출발시간 : <%=depart_time %></p>
+            <p class="">인원 : <%=join_restrict %></p>
+            <p class="">메세지 : <%=message %></p>
+            <p class="joinButton">참여하기</p>
+        </div>
+    </li>
+    <% } %>
+<% } %> 

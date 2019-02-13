@@ -1,0 +1,23 @@
+함수들
+<basic.js>
+logout()
+showCurPos()
+togglePlaceSearchMap()
+
+placeSearchHandler()    :  togglePlaceSearchMap()호출
+selectPlace()
+
+getDistance()
+
+$(".joinButton) click event placeSearchHandler
+
+processShowPosts()
+printPostInfoPage() 
+
+<recent_search.js>
+showRecentSearchList()
+AddRecentSearchItem()
+printRecentSearchList -showRecentSearchList()에서 호출
+insertPostSum() 
+
+
