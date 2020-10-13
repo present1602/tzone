@@ -32,7 +32,7 @@
             </p>
             <p class="signup_item">비밀번호</p>
             <p class="text_input_p">            
-                <input type="text" class="text_input"  name="password" value="1234">
+                <input type="password" class="text_input"  name="password" value="1234">
             </p>
        
             <p class="signup_item">이름</p>
@@ -61,7 +61,7 @@
         
             <p class="signup_item">프로필이미지</p>
             <div style="text-align:center;">
-                <canvas id="canvas" style="width:100px;height:100px;border-radius:80px; border:1px solid red">
+                <canvas id="canvas" style="width:100px;height:100px;border-radius:80px; margin:10px auto;display:none; border:1px solid gray">
                 </canvas>
             </div>
             <input type="file" id="profile_image" name="profile_image">
@@ -89,6 +89,7 @@ fileInput.addEventListener('change', function (e) {
         var img = new Image();
         img.onload = function(){
             console.log("img onload") 
+            canvas.style.display = 'block';
             canvas.width = 100;
             canvas.height = 100;
             var ctx = canvas.getContext("2d");
@@ -123,6 +124,8 @@ fileInput.addEventListener('change', function (e) {
 });
 
 $(function(){  //이거 안하면 jquery form 플러그인 로드 전에 아래 코드 읽어서 문제생김??
+
+
     $('#signup_submit').click(function(e){
         console.log('signup_submit submit 내부 함수 시작')
         e.preventDefault();
@@ -130,6 +133,7 @@ $(function(){  //이거 안하면 jquery form 플러그인 로드 전에 아래 
             url:'/signup'
             ,contentType: 'application/json'
             ,success: function(loginEjs){
+                alert('회원가입이 완료되었습니다');
                 console.log("signupform ajaxsubmit 처리 success cb - loginEjs 받아오기 성공")
                 $("#wrap").html(loginEjs);
             },
