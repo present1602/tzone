@@ -43,16 +43,19 @@ var routeUser = require('./router/user');
 var routePost = require('./router/post');
 
 function connectDB(){
-    var databaseUrl = ('mongodb://localhost:27017/local', { useNewUrlParser: true, useUnifiedTopology: true});
+    var configData = require('./config');
+
+    // var databaseUrl = 'mongodb://localhost:27017/local';
+    var databaseUrl = `mongodb://${configData.dbuser}:${configData.dbpw}@${configData.mlab_db}`;
+
     mongoose.Promise = global.Promise;
-    // mongoose.connect('mongodb://192.168.0.10:27017/local', {useNewUrlParser: true, useUnifiedTopology: true});
-    mongoose.connect('mongodb://localhost:27017/local', {useNewUrlParser: true, useUnifiedTopology: true});
+    mongoose.connect(databaseUrl, {useNewUrlParser: true, useUnifiedTopology: true});
+
     database = mongoose.connection;
   
     database.on('error', console.error.bind(console, 'mongoose connection error.'));
     database.on('open', function(){
         console.log('데이터베이스에 연결되었습니다 ');
-        
      
         routeUser.init(User); 
         routePost.init(Post, User); 
@@ -73,14 +76,15 @@ app.get('/auth_phone', function(req,res){
 });
 
 app.post('/auth_phone', function(req,res){
-    var phone = req.body.phone_input;
-    var authNum = req.body.phone_auth_num;
-    console.log('authNum : ' + authNum);
-    if(authNum=='1234'){
-        res.render('signup', {data:phone});
-    }else{
-        res.send("<h3>인증번호가 틀렸습니다</h3>");
-    }
+    res.render('signup')
+    // var phone = req.body.phone_input;
+    // var authNum = req.body.phone_auth_num;
+    // console.log('authNum : ' + authNum);
+    // if(authNum=='1234'){
+    //     res.render('signup', {data:phone});
+    // }else{
+    //     res.send("<h3>인증번호가 틀렸습니다</h3>");
+    // }
 });
 
 app.get('/signup', function(req,res){
