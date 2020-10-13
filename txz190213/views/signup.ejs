@@ -1,5 +1,7 @@
 
-<script src="//cdnjs.cloudflare.com/ajax/libs/jquery.form/3.51/jquery.form.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.form/3.51/jquery.form.min.js"></script>
+<!-- <script src="./jquery.form.min.js"></script> -->
+<!-- <script src="/js/jquery.form.min.js"></script> -->
 <style>
 #signup_content_wrap{margin:0 auto; width:300px; padding:15px;
 }
@@ -124,15 +126,19 @@ $(function(){  //이거 안하면 jquery form 플러그인 로드 전에 아래 
     $('#signup_submit').click(function(e){
         console.log('signup_submit submit 내부 함수 시작')
         e.preventDefault();
-        $("#signup_form").ajaxSubmit({
+        var options = {
             url:'/signup'
             ,contentType: 'application/json'
             ,success: function(loginEjs){
                 console.log("signupform ajaxsubmit 처리 success cb - loginEjs 받아오기 성공")
                 $("#wrap").html(loginEjs);
+            },
+            error: function(err){
+                console.log('ajax form submit err : ', err)
             }
-        });
-        // return false;  //????
+        }
+        $("#signup_form").ajaxSubmit(options);
+        return false;  //????
     });
 });
  

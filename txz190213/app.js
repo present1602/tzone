@@ -43,11 +43,12 @@ var routeUser = require('./router/user');
 var routePost = require('./router/post');
 
 function connectDB(){
-    // var databaseUrl = ('mongodb://localhost:27017/local', { useNewUrlParser: true });
+    var databaseUrl = ('mongodb://localhost:27017/local', { useNewUrlParser: true, useUnifiedTopology: true});
     mongoose.Promise = global.Promise;
-    mongoose.connect('mongodb://192.168.0.72:27017/local', { useNewUrlParser: true});
+    // mongoose.connect('mongodb://192.168.0.10:27017/local', {useNewUrlParser: true, useUnifiedTopology: true});
+    mongoose.connect('mongodb://localhost:27017/local', {useNewUrlParser: true, useUnifiedTopology: true});
     database = mongoose.connection;
-
+  
     database.on('error', console.error.bind(console, 'mongoose connection error.'));
     database.on('open', function(){
         console.log('데이터베이스에 연결되었습니다 ');
@@ -95,7 +96,7 @@ app.get('/login', function(req,res){
 
 app.post('/login', routeUser.login);
 app.post('/signup', upload.array('profile_image', 1), function(req,res){
-    debugger;
+    console.log("post /signup")
     passport.authenticate('local-signup', {session:false}, function(err, user)  {
         if(err) throw err;
         if(user){
