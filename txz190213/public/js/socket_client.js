@@ -28,6 +28,12 @@ function userLeave(){
         socket.emit('leave', data, function(response){
             console.log("leave event 전달, cb 실행 - socketResponse : ");
             if(response.success="is_success"){
+                
+                webDB.transaction(function (tx) {
+                    var deleteSQL = 'DELETE FROM chat_history';
+                    tx.executeSql(deleteSQL);
+                });
+
                 alert("방에서 퇴장하였습니다");
                 // var postWrap = document.getElementById("postJoinViewWrap")
                 // postWrap.innerHTML ="";
@@ -55,11 +61,25 @@ socket.on('connect', function(){ //소켓 끊어졌다 재접속돼도 chatOnId�
     
     socket.on('member_join', function(data){
         // data: {"linkedchat":chatId, "username":localStorage.getItem('username')}); 
+        console.log('member join data : ', data);
         alert(data.username + "님이 참여했습니다");
         var countNode = document.getElementById("memberCount")
         var count = Number(countNode.textContent);
         count++;
         countNode.innerHTML = count;
+
+        var postOid = data.linkedpost;
+        var partiCountId = postOid + "_participant_count";
+        var partiCount = document.getElementById(partiCountId);
+        
+        if( partiCount != null){
+            var partiCountVal = partiCount.value;
+            if( partiCountVal && Number(partiCountVal) ){
+                var countUpdated = Number(partiCountVal) +1;          
+                partiCount.value = countUpdated;
+            }
+        }
+
     })
 
     socket.on('member_leave', function(data){
@@ -68,6 +88,18 @@ socket.on('connect', function(){ //소켓 끊어졌다 재접속돼도 chatOnId�
         var count = Number(countNode.textContent);
         count--;
         countNode.innerHTML = count;
+        var postOid = data.post_oid;
+        var partiCountId = postOid + "_participant_count";
+        var partiCount = document.getElementById(partiCountId);
+        
+        if( partiCount != null){
+            var partiCountVal = partiCount.value;
+            if(partiCountVal && Number(partiCountVal) && Number(partiCountVal) > 0){
+                var countUpdated = Number(partiCountVal) -1;          
+                partiCount.value = countUpdated;
+            }
+        }
+        
     })
     if(chatOid && postOid){
         console.log("if(chatOid) && postOid -> true 구문 실행"); 

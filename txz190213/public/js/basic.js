@@ -574,7 +574,7 @@ function join(e){
                 
                 var chatId = post.linkedchat;
                 console.log('postlist에서 방 소켓 join emit 전 post.linkedchat 확인  : ' + post.linkedchat);
-                socket.emit('join', {"linkedchat":chatId, "username":localStorage.getItem('username')}); 
+                socket.emit('join', {"linkedchat":chatId, "username":localStorage.getItem('username'), "linkedpost":targetPost}); 
                 
                 console.log('소켓 포스트 join 이벤트');
                 

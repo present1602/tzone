@@ -54,7 +54,7 @@
             <img src="/images/spot2_icon.gif" id="arriveSpotIcon" class="locationIcon">
         </div> 
         <div class="postInfoInList">
-            <input type="hidden" class="post_oid" value=<%=postObjId %>> </p>
+            <input type="hidden" class="post_oid" value='<%=postObjId %>'> </p>
             <!-- <p class="" style="display:block">작성자 : <%=writerObjId %></p> -->
             
             <p class="postItemInList departTime">
@@ -65,7 +65,9 @@
                 <span class="itemKey">탑승인원</span>
                 <span class="itemVal"><%=join_restrict %>명</span>
                 <span class="itemVal2">/
-                    <input class="partiCount" style="width:18px; border:none; margin-left:5px; " value=<%=participant_count %>>명 참여중
+                    <input class="partiCount" style="width:18px; border:none; margin-left:5px; " 
+                    id="<%=postObjId %>_participant_count"
+                    value=<%=participant_count %>>명 참여중
                 </span>
             </p>
                 <!-- <span class="writerName"><%=writerName %></span>

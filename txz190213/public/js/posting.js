@@ -137,7 +137,7 @@ function processPosting(){
             postingSuccessContent+=   '<p class="postSuccessItem">도착 : ' + arrivePlace + '</p>';
             postingSuccessContent+=   '<p class="postSuccessItem">출발시간 : ' + departTime+ '</p>';
             postingSuccessContent+=   '<p class="postSuccessItem">모집인원 : ' + joinLimit + '</p>';
-            postingSuccessContent+=   '<p class="postSuccessItem" style="overflow:hidden;white-space:nowrap;text-overflow:ellipsis">메세지 : ' + joinLimit + '</p>';
+            postingSuccessContent+=   '<p class="postSuccessItem" style="overflow:hidden;white-space:nowrap;text-overflow:ellipsis">메세지 : ' + message + '</p>';
             postingSuccessContent+='</div>'
             postingSuccessContent+='<p id="postingSuccessConfirm">확인</p>';
             postingSuccess.innerHTML= postingSuccessContent; 
