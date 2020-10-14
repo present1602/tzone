@@ -1,12 +1,24 @@
 console.log('socket_client.js 로드 시작');
 
 var socket;
+// var configData = require('./config');
 if(!socket){
-    socket = io.connect('http://localhost:3000');
+    // socket = io.connect('http://localhost:3000');
+
+    // const baseUrl = configData.baseUrl;
+    // const port = configData.port;
+    // const url = `http://${baseUrl}`
+    // console.log('config baseUrl : ', baseUrl)
+    // console.log('config port : ', port)
+    
+    socket = io.connect('http://192.168.0.11:3000');
+    // socket = io.connect('http://localhost:3000');
+    console.log("socket empty try connect")
+    console.log('in socket_client.js io in !socket block : ', io);
 }
+
 var chatlist = document.getElementById("chatlist");
 function userLeave(){
-    alert("usreleave 실행")
     var cfm = confirm("참여를 취소하시겠습니까?");
     if(cfm){
         if(!socket){
@@ -39,6 +51,7 @@ function userLeave(){
     }
 };
 socket.on('connect', function(){ //소켓 끊어졌다 재접속돼도 chatOnId변수값 남아있음
+    console.log("socket connected, userOid : " + userOid + ', chatOid : ' + chatOid);
     
     socket.on('member_join', function(data){
         // data: {"linkedchat":chatId, "username":localStorage.getItem('username')}); 
@@ -60,7 +73,6 @@ socket.on('connect', function(){ //소켓 끊어졌다 재접속돼도 chatOnId�
         console.log("if(chatOid) && postOid -> true 구문 실행"); 
         socket.emit('participantConnedted', {"user_oid":userOid, "chat_oid":chatOid});
     }
-    console.log("socket connected, userOid : " + userOid + ', chatOid : ' + chatOid);
      
     webDB.transaction(function(tr){ //basic.js 나 다른 파일로 옮기기?
         var stat = 'create table if not exists ';

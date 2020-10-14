@@ -68,6 +68,8 @@ function connectDB(){
     });
 }
 
+app.get('/favicon.ico', (req, res) => res.sendStatus(204));
+
 app.post('/loadpost', routePost.loadpost);
 app.post('/posting', routePost.posting);
 
@@ -161,6 +163,41 @@ app.get('/postlist/join', function(req,res){
     });
 });
 
+app.post('/createchat', function(req,res){ // ajax 호출 - data:{'post':postObjId, 'user':writer}
+    console.log('(app.js)POST /createchat 함수 실행');
+    console.log('json str req.body : ' + JSON.stringify(req.body));
+    var user = req.body.user;
+    var post = req.body.post;
+    var newChat = new Chat({"linkedpost" : post});
+    newChat.participants.push({"user":user, "is_writer":true});
+    
+    newChat.save(function(err){
+        console.log('db에 채팅방 저장');
+        if(err) throw err;
+        var chat_oid = newChat._id;
+        Post.findOne({"_id":post}, function(err, post){
+            post.linkedchat = chat_oid;
+            post.save(function(err){
+                if(err) throw err;
+                console.log("before /createchat - socket.join room ");
+                console.log("socket.id : " + socket.id);
+                console.log("[console.dir] - io.sockets.adapter.rooms :  ");
+                console.dir(io.sockets.adapter.rooms);
+                socket.join(chat_oid);
+
+                console.log("after /createchat - socket.join room ");
+                console.log("[console.dir] - io.sockets.adapter.rooms :  ");
+                console.dir(io.sockets.adapter.rooms);
+                console.log("[console.dir] - io.sockets.adapter.rooms[newChat._id] :  ");
+                console.dir(io.sockets.adapter.rooms[newChat._id]);
+                //그 다음??
+            });
+        });
+        
+        res.send({"chat_oid":chat_oid});
+    });
+});
+
 function isAuthenticated(req,res,next){   //질문 req.isAuthenticated() 정의 안해도 사용 가능 -> 세션 false로 한 경우에도?
     console.log('isAuthenticated 실행');
     
@@ -250,8 +287,6 @@ var server = app.listen(3000, function(){
 var io = socketio.listen(server);
 
 
-
-
 function socketEvents(){
     io.sockets.on('connection', function(socket) {
         socket.remoteAddress = socket.request.connection._peername.address;
@@ -308,40 +343,7 @@ function socketEvents(){
         });
     
         
-        app.post('/createchat', function(req,res){ // ajax 호출 - data:{'post':postObjId, 'user':writer}
-            console.log('(app.js)POST /createchat 함수 실행');
-            console.log('json str req.body : ' + JSON.stringify(req.body));
-            var user = req.body.user;
-            var post = req.body.post;
-            var newChat = new Chat({"linkedpost" : post});
-            newChat.participants.push({"user":user, "is_writer":true});
-            
-            newChat.save(function(err){
-                console.log('db에 채팅방 저장');
-                if(err) throw err;
-                var chat_oid = newChat._id;
-                Post.findOne({"_id":post}, function(err, post){
-                    post.linkedchat = chat_oid;
-                    post.save(function(err){
-                        if(err) throw err;
-                        console.log("before /createchat - socket.join room ");
-                        console.log("socket.id : " + socket.id);
-                        console.log("[console.dir] - io.sockets.adapter.rooms :  ");
-                        console.dir(io.sockets.adapter.rooms);
-                        socket.join(chat_oid);
-    
-                        console.log("after /createchat - socket.join room ");
-                        console.log("[console.dir] - io.sockets.adapter.rooms :  ");
-                        console.dir(io.sockets.adapter.rooms);
-                        console.log("[console.dir] - io.sockets.adapter.rooms[newChat._id] :  ");
-                        console.dir(io.sockets.adapter.rooms[newChat._id]);
-                        //그 다음??
-                    });
-                });
-                
-                res.send({"chat_oid":chat_oid});
-            });
-        });
+        
         // Client : socket.emit('join', {"linkedchat":chatId, "username":localStorage.getItem('username')}); 
         socket.on('join', function(data){ 
             console.log('클라이언트로부터 join 이벤트 받음');

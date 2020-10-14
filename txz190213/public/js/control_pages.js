@@ -77,7 +77,7 @@ function openPage(box, pagename){
 }
 
 window.onpopstate = function(e){
-    alert('e.state.page : ', e.state.page)
+    console.log('e.state.page : ', e.state.page)
     if(e.state.page == "chat")
     history.replaceState("posting", "", "/posting")
 }

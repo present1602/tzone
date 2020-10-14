@@ -60,7 +60,7 @@ menubarIcon.addEventListener("click", function(e){
 })
 
 function logout(){
-    alert("logout() 함수 실행");
+    alert("로그아웃하였습니다");
     // if(localStorage.getItem('chat_on')){
     //     console.log('localStorage.getItem("chat_oid") true 참여중인 방 있음 로그아웃 불가 return ');
     //     console.log('chatOnId : ' + chatOnId + ', postOnId : ' + postOnId);
@@ -524,7 +524,6 @@ function printPostInfoPage(post){
     $("#postJoinViewWrap").append(postJoinView);
 
     $("#postViewClose").click(function(e){
-        alert("postviewclose 클릭")
         $("#postJoinViewWrap").css("display", "none");
         history.go(-1);
     });
@@ -546,10 +545,10 @@ function join(e){
     
     console.log("1) postOid : " + postOid);   
     if(postOid==targetPost){
-        alert("===참여중인 방 클릭=== return postOid : ", postOid)
+        alert("이미 참여중인 방입니다");
         return;
     }else if(postOid!= null){
-        alert("===참여중인 방 있음=== ");
+        alert("이미 참여중인 방이 존재합니다");
     
     }else{
         var partiCountNode = targetContentNode.getElementsByClassName('partiCount')[0];
