@@ -56,6 +56,68 @@
     }
 </style>
 
+<script>
+
+function processLogin(){
+    console.log('로그인 클릭');
+    $.ajax({
+        url:'/login'
+        ,method:"POST"
+        ,data:$("#login_form").serializeArray()
+        ,success:function(data){
+            console.log('processLogin ajax success - data : ' + JSON.stringify(data));
+            localStorage.setItem("x-access-token", data.token);
+            var token = data.token;
+            var userOid = parseJwt(token).user_oid;
+            console.log("userOid : " + userOid);
+            localStorage.setItem("user_oid", userOid);
+            console.log("localStorage.getItem('user_oid') : " + localStorage.getItem('user_oid'));
+            
+            localStorage.setItem("username", data.username);
+            console.log("localStorage setItem username 추가 data.username : " + data.username );
+            //히스토리 스택 0로 만들기  //deleteAll?
+            // window.history.go(-(history.length-1));
+            console.log("parseJwt(token).user_oid : " + parseJwt(token).user_oid);
+            loadIndex(token);
+        }
+        ,error:function(err){
+            $("#wrap").html(err);
+        }
+    });
+}
+
+function loadAuthPhone(){
+    $.ajax({
+        url : '/auth_phone'
+        ,method : 'get'
+        ,success:function(authPhoneEjs){
+            console.log('ajax get authPhoneEjs success');
+            $("#wrap").html(authPhoneEjs);
+            window.history.pushState({page:'auth_phone'}, '', '/auth_phone');
+        }
+    });
+}
+
+function processPhoneAuth(){
+    $.ajax({
+        url:'/auth_phone'
+        ,method:"POST"
+        ,data:$("#phone_auth_form").serializeArray()
+        ,success:function(signupEjs){   
+            console.log('/auth_phone POST 처리 success; data : signupEjs');
+            $("#wrap").html(signupEjs);
+            // console.log('pageFrom : ' + pageFrom);   // pageFrom : 'auth_phone' 
+            window.history.pushState({page:'signup'}, "Title1", "/signup");
+            // pageOn = history.state.page;
+        }
+        ,error:function(err){
+            $("#wrap").html(err);
+        }
+    });
+}
+</script>
+
+
 <div id="login_cotent_wrap">
     <h3 id="login_title">로그인</h3>
     <form action="" id="login_form">

@@ -11,7 +11,7 @@ if(!socket){
     // console.log('config baseUrl : ', baseUrl)
     // console.log('config port : ', port)
     
-    socket = io.connect('http://192.168.0.11:3000');
+    socket = io.connect('http://192.168.0.14:3000');
     // socket = io.connect('http://localhost:3000');
     console.log("socket empty try connect")
     console.log('in socket_client.js io in !socket block : ', io);
@@ -97,6 +97,8 @@ socket.on('connect', function(){ //소켓 끊어졌다 재접속돼도 chatOnId�
             if(partiCountVal && Number(partiCountVal) && Number(partiCountVal) > 0){
                 var countUpdated = Number(partiCountVal) -1;          
                 partiCount.value = countUpdated;
+            }else{
+                console.log('something wrong to participant count as user leave ')
             }
         }
         
@@ -158,14 +160,6 @@ socket.on('connect', function(){ //소켓 끊어졌다 재접속돼도 chatOnId�
     })
     
     
-
-    socket.on('user_leave', function(data){
-        var leaveMessage = "<li>"
-        leaveMessage += '<p class="info_message" style="border:1px solid blue;">' + data.username + '</p></li>'
-        // $("#chatlist").append(leaveMessage);
-         
-    });
-
     socket.on('message', function(data){
         console.log('메세지 전송 받음 - jstr data : ' + JSON.stringify(data));
         console.log("data.senderPicFilename : " + data.senderPicFilename);

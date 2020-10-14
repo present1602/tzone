@@ -89,6 +89,13 @@ function toPosting(){
         }
     });
     
+    /*
+        <div id="postingSubmitBox">
+            <input type="button" id="posting_submit" onclick="processPosting()" value="완료">
+        </div>
+        20201014
+        완료 클릭 시 이벤트 이중처리되어있음. 근데 왜 문제 없었나?
+    */
     $("#posting_form #posting_submit").click(function(){
         processPosting();    
     });
@@ -146,7 +153,8 @@ function processPosting(){
             $("#postingSuccessConfirm").click(function(e){
                 $postingSuccessWrap.html("");
                 $postingSuccessWrap.css("display", "none");
-                history.back();
+                // history.back();  ??
+                processShowPosts();
             });
 
             handleHistoryAfterPosting()

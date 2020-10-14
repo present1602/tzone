@@ -362,8 +362,13 @@ function socketEvents(){
             socket.to(data.chat_oid).emit('member_leave', data)
             Post.findOne({"_id":data.post_oid}).select("participant_count").exec(function(err, post){
                 if(err) throw err;
-                post.participant_count = post.participant_count-1;
-                post.save();
+                var partiCount = post.participant_count
+                if( partiCount > 1){
+                    partiCount = partiCount-1;
+                    post.save();
+                }else if ( partiCount == 1) {
+                    Post.findOne({"_id":data.post_oid}).remove().exec();
+                }
             })
             Chat.findOne({"_id":data.chat_oid}).select("participants").exec(function(err, chat){
                 if(err) throw err;

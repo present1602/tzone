@@ -410,45 +410,10 @@ function togglePlaceSearchMap(){
     });
 }
 
-// window.onpopstate = function(e){
-//     console.log('onpopstate event - history.length : ' + history.length);
-//     if(e.state.page=='login'){   
-//         console.log('e.state.page =="login" onpopstate 이벤트');
-//         loadLogin();
-//     }
-//     else if(e.state.page == 'auth_phone'){   
-//         if(confirm("인증초기화 ok?")){  //인증초기화 ok를 누르면 e.state.page = auth_phone되게. 윗줄이랑 순서바꾸기?
-//             loadAuthPhone();  
-//         }
-//         else{
-//             history.forward();  // 질문 정상적인 방법?
-//         }
-//         // loadAuthPhone();
-//     }
-//     else if(e.state.page == 'index'){
-//         console.log("e.state.page =='index' 구문 실행");
-//         $(".psWrap").css("display", "none");
-//         $("#postingWrap").css("display", "none");
-//         // $("#departSearchWrap").css("display", "none");
-//         // $("#arriveSearchWrap").css("display", "none");
-//         // $("#postingWrap").css("display", "none");
-//     }
-//     else if(e.state.page == 'posting'){
-//         $(".psWrapInPosting").css("display", "none");
-//     }
-// }
-
-/* <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.0.4/socket.io.js"></script> */
-
 
 
 function processShowPosts(){
     console.log('processShowPosts 호출');
-    // var arr = $("#mainSearchForm").serializeArray();
-    // for(i=0;i<arr.length;i++){
-    //     console.log("arr[i] : " + JSON.stringify(arr[i]) );
-    // }
-    // console.log('$("#mainSearchForm").serializeArray() ' + $("#mainSearchForm").serializeArray().toString());
 
     $.ajax({
         url:"/showposts"
@@ -456,6 +421,7 @@ function processShowPosts(){
         ,data:$("#mainSearchForm").serializeArray()
         // ,dataType:
         ,success:function(postlistEjs){
+
             console.log('ajax POST /showposts success cb 실행');
             var listbox = document.getElementById("postlistBox");
             openPage(listbox, "postlist")
