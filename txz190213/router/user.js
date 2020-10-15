@@ -6,7 +6,6 @@ var bcrypt = require('bcrypt');
 var User = {};
 
 var init = function(model){
-    console.log('user.js init호출됨');
     User = model;
 }
 
@@ -38,11 +37,9 @@ var login = function (req, res, next) {   //next 필요?
 //     ,passwordField:'password'
 //     ,passReqToCallback:true
 //     }, function(req,phone,password,done){
-//         console.log("LocalStrategy 내 function 실행");  
 //         User.findOne({'phone':phone}, function(err, user){
 //             if(err) { return done(err);}
 //             if(user){
-//                 console.log('계정 이미 있음');
 //                 return done(null, false);
 //             }
 //             var phone = req.body.phone;
@@ -64,7 +61,6 @@ var login = function (req, res, next) {   //next 필요?
 
 //             user.save(function(err){
 //                 if(err){throw err};
-//                 console.log("사용자 데이터 추가함.");
 //                 return done(null, user);  
 //             });
             

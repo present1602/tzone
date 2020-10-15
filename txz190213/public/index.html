@@ -17,7 +17,6 @@
 <script src='https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.0.4/socket.io.js'></script>
 
 <script>
-console.log('index.html page') 
 var authToken = localStorage.getItem('x-access-token');
 if(authToken){
     loadIndex(authToken);
@@ -36,13 +35,12 @@ function loadIndex(authToken){
         ,headers:{"x-access-token" :"Bearer " + authToken}
         ,method:'get'
         ,success:function(indexEjs){
-            console.log("get indexEjs success cb 실행");
             $("#wrap").html(indexEjs);
             history.replaceState({page:'home'}, "", "/index.html");    //ejs파일을 state의 데이터에 넣을 수 있나?
         
         }
         ,error:function(err){
-            console.log('ajax err(indexejs) : ' + JSON.stringify(err));
+            alert('ajax err(indexejs) : ' + JSON.stringify(err));
         }
     });    
 }
@@ -56,7 +54,7 @@ function loadLogin(){
             //ejs파일을 state의 데이터에 넣을 수 있나?
         }
         ,error:function(err){
-            console.log('ajax err(loginejs) : ' + JSON.stringify(err));
+            alert('ajax err(loginejs) : ' + JSON.stringify(err));
         }
     });
 }

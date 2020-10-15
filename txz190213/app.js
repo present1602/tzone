@@ -45,9 +45,7 @@ var routePost = require('./router/post');
 function connectDB(){
     var configData = require('./config');
 
-    // var databaseUrl = 'mongodb://localhost:27017/local';
     var databaseUrl = `mongodb://${configData.dbuser}:${configData.dbpw}@${configData.mlab_db}`;
-
     mongoose.Promise = global.Promise;
     mongoose.connect(databaseUrl, {useNewUrlParser: true, useUnifiedTopology: true});
 
@@ -294,7 +292,6 @@ function socketEvents(){
 
         socket.on('disconnect', function(reason){
             console.log("socket disconnect event, socket.id : ", socket.id)
-            
         })
         console.log('socket.id :', socket.id, ', connection info :', socket.request.connection._peername);
         // 소켓 객체에 클라이언트 Host, Port 정보 속성으로 추가 
@@ -357,8 +354,9 @@ function socketEvents(){
         });
         
         socket.on('leave', function(data, callback){
+
             //(From client) var data = {"user_oid":uoid, "username":uname, "post_oid":poid, "chat_oid":coid};
-            console.log('leave event, data : ', JSON.stringify(data))
+            console.log('leave event, data : ', data)
             socket.to(data.chat_oid).emit('member_leave', data)
             Post.findOne({"_id":data.post_oid}).select("participant_count").exec(function(err, post){
                 if(err) throw err;

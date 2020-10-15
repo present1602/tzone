@@ -20,14 +20,22 @@ if(!socket){
 var chatlist = document.getElementById("chatlist");
 function userLeave(){
     var cfm = confirm("참여를 취소하시겠습니까?");
+
     if(cfm){
+        console.log('if 참여취소 confirm true 실행');
         if(!socket){
+            console.log('if !socket 블록 실행');
+
             socket.open();
+            // io.connect(clientBaseUrl)
         }
+        console.log('if !socket 블록 아래 실행');
+
         var data = {"user_oid":userOid, "username":username, "post_oid":postOid, "chat_oid":chatOid};
         socket.emit('leave', data, function(response){
-            console.log("leave event 전달, cb 실행 - socketResponse : ");
-            if(response.success="is_success"){
+            console.log("leave event 전달, cb 실행 - response : ", response);
+
+            if(response.is_success="success"){
                 
                 webDB.transaction(function (tx) {
                     var deleteSQL = 'DELETE FROM chat_history';
@@ -35,9 +43,7 @@ function userLeave(){
                 });
 
                 alert("방에서 퇴장하였습니다");
-                // var postWrap = document.getElementById("postJoinViewWrap")
-                // postWrap.innerHTML ="";
-                // postWrap.style.display="none";
+            
                 $("#postJoinViewWrap").css("display", "none").html("");
 
                 var postSum = document.getElementById("postJoinSum");
@@ -98,7 +104,7 @@ socket.on('connect', function(){ //소켓 끊어졌다 재접속돼도 chatOnId�
                 var countUpdated = Number(partiCountVal) -1;          
                 partiCount.value = countUpdated;
             }else{
-                console.log('something wrong to participant count as user leave ')
+                alert('something wrong to participant count as user leave ')
             }
         }
         
@@ -115,12 +121,12 @@ socket.on('connect', function(){ //소켓 끊어졌다 재접속돼도 chatOnId�
         tr.executeSql(stat, [], function(){
             console.log('테이블생성_sql 실행 성공'); 
         }, function(){
-            console.log('테이블생성_sql 실행 실패'); 
+            alert('테이블생성_sql 실행 실패'); 
         });
       }, function(){ //에러 발생 시 호출할 메소드
-          console.log('테이블 생성 트랜잭션 실패...롤백은 자동');
+          alert('테이블 생성 트랜잭션 실패...롤백은 자동');
       }, function(){ // 성공 시 호출할 메소드
-          console.log('테이블 생성 트랜잭션 성공');
+        //   console.log('테이블 생성 트랜잭션 성공');
     });
     webDB.transaction(function(tr){
         tr.executeSql("select * from chat_history", [], function(tx, result){
@@ -203,7 +209,7 @@ socket.on('disconnect', function(reason){
     // socket.open();
 
     socket = io.connect(clientBaseUrl);
-    
+
     //추가2) emit('participantDisconnect', ...)
     // if(chatOid){
     //     socket.emit('participantDisconnect', {chat_oid:chatOid, user_oid:userOid})

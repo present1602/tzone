@@ -1,6 +1,6 @@
 console.log('load basic.js 시작');
 
-var clientBaseUrl = 'http://192.168.0.14:3000';
+var clientBaseUrl = 'http://192.168.0.27:3000';
 
 var lng = 126.6531160; //위치 못가져오는 경우 초기 맵 띄위기 변수
 var lat = 37.4496270; 
@@ -21,7 +21,6 @@ var username = localStorage.getItem("username");
 var webDB = window.openDatabase('webDB', '1.0', '채팅DB', 1024*1024);
 
 if(!localStorage.getItem("searchHistory")){
-    console.log('if !localStorage.getItem("searchHistory") 구문 실행');
     localStorage.setItem("searchHistory", "[]");    
 }
 else{
@@ -82,17 +81,15 @@ $.getScript(   //onpopstate login 변경 시 현재위치와 맵 리로드 없�
     "//dapi.kakao.com/v2/maps/sdk.js?appkey=85097723654db6cd517aed007a5a1371&libraries=services&autoload=false"
     )
 .done(function(){
-    console.log('getscript kakao api - done, cb 실행');
     daum.maps.load(function(){  
         console.log("daum.maps.load 콜백");
         showCurPos();
         addEvents();
     });
-    console.log("인덱스 daum.maps.load 구문 아래");
 })
 
 .fail(function(){
-    console.log('get map api script failed');
+    alert('get map api script failed');
 });     
 
 function addEvents(){
@@ -100,7 +97,6 @@ function addEvents(){
     var listBox;
     var seperator;
     $("#departInput").click(function(){   //focus -> click으로? posting 페이지 부분도 생각
-        console.log("출발지 검색 click");
         $(':focus').blur();
         seperator = "depart";
         psWrap = document.getElementById("departSearchWrap")
@@ -110,7 +106,6 @@ function addEvents(){
         listBox = document.getElementById("departResultBox");
 
         var departVal =  this.value  //질문 e.target.value는 안되나?
-        console.log("departVal : " + departVal);
         $("#departSearchInput").val(departVal);   //???
         openPage(psWrap, 'placesearch');
         
@@ -122,7 +117,6 @@ function addEvents(){
     });
 
     $("#arriveInput").click(function(){
-        console.log("도착지 검색 click");
         $(':focus').blur();
         seperator = "arrive";
         psWrap = document.getElementById("arriveSearchWrap")
@@ -135,7 +129,6 @@ function addEvents(){
 
         /*메인 searchForm에 출발지, 도착지가 입력되 경우 그 값을 장소입력페이지 장소입력 창으로 전달 */
         var arriveVal =  this.value
-        console.log("arriveVal : " + arriveVal);
         $("#arriveSearchInput").val(arriveVal);
 
         if(history.state.page!="placesearch"){
@@ -149,7 +142,6 @@ function addEvents(){
 
     $(".placeSearchInput").keydown(function(key){  //map api script autoload=false 상태 -> daum.maps.load({}) 메소드 구문 밖이라 script load 안된 상태?
         if(key.keyCode==13){
-            console.log("$(this).val() : " + $(this).val());
             var keyword = $(this).val();
             placeSearchHandler(keyword, psWrap, listBox, seperator);         
         }
@@ -157,7 +149,6 @@ function addEvents(){
 }
 
 function showCurPos(){
-    console.log("showcurpos fnc 실행");
     var mapContainer;
     var map;
     var mapOption;
@@ -175,7 +166,6 @@ function showCurPos(){
             console.log('pos : ' + JSON.stringify(pos));  //질문 빈객체로 나옴 아래는 출력됨
             lat = pos.coords.latitude;
             lng = pos.coords.longitude;
-            console.log('lat : ' + lat + ', '  + 'lng : ' + lng);
             mapContainer = document.getElementById('map') // 지도를 표시할 div 
             mapOption = { 
                 center: new daum.maps.LatLng(lat, lng), // 지도의 중심좌표
@@ -190,9 +180,7 @@ function showCurPos(){
             var geocoder = new daum.maps.services.Geocoder();
             geocoder.coord2Address(lng, lat, function(result, status){
                 if (status === daum.maps.services.Status.OK) {                         
-                    console.log("현재위치 표시 관련 코드 수정 in if daum map status ok")
                     var curPosAddr = result[0].address.address_name;
-                    console.log('현재위치 출력, 지번 : ', curPosAddr);
                     $("#departInput").val(curPosAddr);
                     $("#departLatInMain").val(lat)
                     $("#departLngInMain").val(lng)
@@ -202,7 +190,7 @@ function showCurPos(){
                     departDataOn.lng = lng;
                     isDepartSelected = true;
                 }else{
-                    console.log("현재 위치 좌표값으로 주소 불러오지 못함");
+                    alert("현재 위치 좌표값으로 주소 불러오지 못함");
                 }               
                 
             });

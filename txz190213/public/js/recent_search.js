@@ -1,26 +1,19 @@
 
 
 function showRecentSearchList(listBox){
-    console.log("showRecentSearchList 실행 최근검색 기록 출력 ")
 
     var getHistoryRecent = localStorage.getItem('searchHistory');
     var placesHistory = JSON.parse(getHistoryRecent);
     var placesHistoryLen = placesHistory.length;
-    console.log("JSON.parse(getHistoryRecent).length : " + placesHistory.length);
     if(placesHistoryLen==0){
-        console.log("최근검색 리스트 없음");
         var printMessage = "<p style='text-align:center;font-size:13px; font-weight:bold; margin:30px 0;'>최근검색 기록이 없습니다</p>"
         listBox.innerHTML= printMessage;
     }
     else{
-        console.log("최근검색 리스트 출력 ");
         //최근장소검색리스트 
         var printList = printRecentSearchList(getHistoryRecent);
         listBox.innerHTML = printList;
         
-        // $(".placenameInList").bind("click", function(e){ //basic.js
-        //     selectPlace(e);
-        // });
     }
 } 
 
@@ -46,11 +39,9 @@ function printRecentSearchList(getHistoryRecent){
 
 /* AddRecentSearchItem() : 메인페이지의 검색과 포스팅 시의 검색에서 사용 */  
 function addRecentSearchItem(tg_place, tg_jbaddr, tg_lat, tg_lng){ 
-    console.log("AddRecentSearchItem() 실행 -선택 장소 최근검색항목 추가 ")
     var listStr = localStorage.getItem("searchHistory");        
     var list =JSON.parse(listStr); //Array 객체로 변환
     
-    console.log("최근검색 list.length " + list.length);
     var newItem = { 
         "placename":tg_place, "jibun_addr":tg_jbaddr, "road_addr":""
         ,"lat":tg_lat, "lng":tg_lng, "date":Date.now()
@@ -65,7 +56,6 @@ function addRecentSearchItem(tg_place, tg_jbaddr, tg_lat, tg_lng){
         list.unshift(newItem)
     }
     localStorage.setItem("searchHistory", JSON.stringify(list));
-    console.log("list.length after add Item " + list.length);
     
 }
 

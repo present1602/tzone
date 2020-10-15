@@ -95,10 +95,6 @@ var posting = function(req,res,next){    //(req,res,next에서 ) next 지움
             res.send(post);
 
             console.log('after send post');
-            // console.log("post : " );
-            // console.log(post);
-            // console.log("post.toJSON()");
-            // console.log(post.toJSON());
 
         });
     });
@@ -117,10 +113,6 @@ var showposts = function(req,res){
     var arriveLat = req.body.arriveLatInMain;
     console.log("depPlace : " + depPlace);
     console.log("arvPlace : " + arvPlace);
-    console.log("departLng : " + departLng);
-    console.log("departLat : " + departLat);
-    console.log("arriveLng : " + arriveLng);
-    console.log("arriveLat : " + arriveLat);
     
     // var r2;
     // query.where('dep_geometry').within().circle({ center: dep_geometry.coordinates, radius: r});
@@ -149,10 +141,8 @@ var showposts = function(req,res){
     //     {center:{type:'Point', coordinates:[parseFloat(arriveLng), parseFloat(arriveLat)]}} 
     // ).limit(2);
     // query.exec(function(err, results){
-    //     console.log('게시물 검색 쿼리 실행')
     //     if(err){ throw err };
     //     if(results){
-    //         console.log('if(results) == true ');
     //         res.render('postlist', {posts:results});
     //     }     
     // });
@@ -169,8 +159,6 @@ var showposts = function(req,res){
     //     .within()
     //     .circle(area2)
     //     .exec(function(err, objects) {
-    //         console.log(err);
-    //         console.log(objects);
 
     //         if(err) return eachCallback(err);
 
