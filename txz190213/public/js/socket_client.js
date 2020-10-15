@@ -11,7 +11,7 @@ if(!socket){
     // console.log('config baseUrl : ', baseUrl)
     // console.log('config port : ', port)
     
-    socket = io.connect('http://192.168.0.14:3000');
+    socket = io.connect(clientBaseUrl);
     // socket = io.connect('http://localhost:3000');
     console.log("socket empty try connect")
     console.log('in socket_client.js io in !socket block : ', io);
@@ -200,7 +200,10 @@ socket.on('connect', function(){ //소켓 끊어졌다 재접속돼도 chatOnId�
 socket.on('disconnect', function(reason){
     console.log('소켓 종료, socket.id : ', socket.id);
     console.log("reason : ", reason)
-    socket.open();
+    // socket.open();
+
+    socket = io.connect(clientBaseUrl);
+    
     //추가2) emit('participantDisconnect', ...)
     // if(chatOid){
     //     socket.emit('participantDisconnect', {chat_oid:chatOid, user_oid:userOid})

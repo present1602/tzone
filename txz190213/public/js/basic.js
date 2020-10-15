@@ -1,5 +1,7 @@
 console.log('load basic.js 시작');
 
+var clientBaseUrl = 'http://192.168.0.14:3000';
+
 var lng = 126.6531160; //위치 못가져오는 경우 초기 맵 띄위기 변수
 var lat = 37.4496270; 
 var isDepartSelected = false; 
