@@ -115,7 +115,7 @@ function processPosting(){
             console.log("process posting success, insert successPosting ejs ");
             console.log('post.message : ' + post.message);
             console.log('post.dep_placeinfo.placename : ' + post.dep_placeinfo.placename);
-            
+
             $("#postingWrap").css("display", "none");
             var writer = post.writer;  //userObjectId 
             var postObjId = post._id;
@@ -148,6 +148,7 @@ function processPosting(){
             postingSuccessContent+='</div>'
             postingSuccessContent+='<p id="postingSuccessConfirm">확인</p>';
             postingSuccess.innerHTML= postingSuccessContent; 
+            // debugger;
             $postingSuccessWrap.append(postingSuccess);
             
             $("#postingSuccessConfirm").click(function(e){
@@ -159,12 +160,14 @@ function processPosting(){
 
             handleHistoryAfterPosting()
 
+
             console.log("1) postObjId : " + postObjId);
             $.ajax({
                 url:'/createchat'
                 ,method:'post'
                 ,data:{'post':postObjId, 'user':writer}  
                 ,success:function(chat){  
+                    // debugger;
                     console.log('createchat success - chat.chat_oid  : ' + chat.chat_oid);
                     
                     $("#postingIcon").css("display", "none");

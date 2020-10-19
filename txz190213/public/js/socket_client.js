@@ -1,20 +1,14 @@
 console.log('socket_client.js 로드 시작');
 
 var socket;
-// var configData = require('./config');
-if(!socket){
-    // socket = io.connect('http://localhost:3000');
 
-    // const baseUrl = configData.baseUrl;
-    // const port = configData.port;
-    // const url = `http://${baseUrl}`
-    // console.log('config baseUrl : ', baseUrl)
-    // console.log('config port : ', port)
-    
-    socket = io.connect(clientBaseUrl);
-    // socket = io.connect('http://localhost:3000');
+
+if(!socket){   
     console.log("socket empty try connect")
     console.log('in socket_client.js io in !socket block : ', io);
+
+    // socket = io.connect(clientBaseUrl);
+    var socket = io();
 }
 
 var chatlist = document.getElementById("chatlist");

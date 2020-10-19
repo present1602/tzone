@@ -15,6 +15,28 @@ var jwt = require('jsonwebtoken');
 var LocalStrategy = require('passport-local').Strategy; 
 var socketio = require('socket.io');
 
+process.env.NODE_ENV = process.env.NODE_ENV && ( process.env.NODE_ENV  == 'production' ) ? 'production' : 'development';
+
+
+
+function getServerIp() {
+
+    var os = require('os');
+    var ifaces = os.networkInterfaces();
+    var values = Object.keys(ifaces).map(function(name) {
+        return ifaces[name];
+    });
+    values = [].concat.apply([], values).filter(function(val){ 
+        return val.family == 'IPv4' && val.internal == false; 
+    });
+
+    return values.length ? values[0].address : '0.0.0.0';
+}
+
+const localIp = getServerIp()
+console.log("localIp : ", localIp);
+
+
 app.set('view engine', 'ejs');
 app.use(morgan('dev'));
 app.use(bodyParser.json());
@@ -42,7 +64,12 @@ var Chat = require('./models/chatmodel');
 var routeUser = require('./router/user');
 var routePost = require('./router/post');
 
+
 function connectDB(){
+    
+    console.log("process.env.NODE_ENV : ", process.env.NODE_ENV);
+    console.log("process.env.PORT : ", process.env.PORT);
+    
     var configData = require('./config');
 
     var databaseUrl = `mongodb://${configData.dbuser}:${configData.dbpw}@${configData.mlab_db}`;
@@ -65,6 +92,7 @@ function connectDB(){
        console.log('연결이 끊어졌습니다 ');
     });
 }
+
 
 app.get('/favicon.ico', (req, res) => res.sendStatus(204));
 
@@ -161,40 +189,7 @@ app.get('/postlist/join', function(req,res){
     });
 });
 
-app.post('/createchat', function(req,res){ // ajax 호출 - data:{'post':postObjId, 'user':writer}
-    console.log('(app.js)POST /createchat 함수 실행');
-    console.log('json str req.body : ' + JSON.stringify(req.body));
-    var user = req.body.user;
-    var post = req.body.post;
-    var newChat = new Chat({"linkedpost" : post});
-    newChat.participants.push({"user":user, "is_writer":true});
-    
-    newChat.save(function(err){
-        console.log('db에 채팅방 저장');
-        if(err) throw err;
-        var chat_oid = newChat._id;
-        Post.findOne({"_id":post}, function(err, post){
-            post.linkedchat = chat_oid;
-            post.save(function(err){
-                if(err) throw err;
-                console.log("before /createchat - socket.join room ");
-                console.log("socket.id : " + socket.id);
-                console.log("[console.dir] - io.sockets.adapter.rooms :  ");
-                console.dir(io.sockets.adapter.rooms);
-                socket.join(chat_oid);
 
-                console.log("after /createchat - socket.join room ");
-                console.log("[console.dir] - io.sockets.adapter.rooms :  ");
-                console.dir(io.sockets.adapter.rooms);
-                console.log("[console.dir] - io.sockets.adapter.rooms[newChat._id] :  ");
-                console.dir(io.sockets.adapter.rooms[newChat._id]);
-                //그 다음??
-            });
-        });
-        
-        res.send({"chat_oid":chat_oid});
-    });
-});
 
 function isAuthenticated(req,res,next){   //질문 req.isAuthenticated() 정의 안해도 사용 가능 -> 세션 false로 한 경우에도?
     console.log('isAuthenticated 실행');
@@ -301,16 +296,51 @@ function socketEvents(){
            
         })
 
+        app.post('/createchat', function(req,res){ // ajax 호출 - data:{'post':postObjId, 'user':writer}
+            console.log('(app.js)POST /createchat 함수 실행');
+            console.log('json str req.body : ' + JSON.stringify(req.body));
+            var user = req.body.user;
+            var post = req.body.post;
+            var newChat = new Chat({"linkedpost" : post});
+            newChat.participants.push({"user":user, "is_writer":true});
+            
+            newChat.save(function(err){
+                console.log('db에 채팅방 저장');
+                if(err) throw err;
+                var chat_oid = newChat._id;
+                Post.findOne({"_id":post}, function(err, post){
+                    post.linkedchat = chat_oid;
+                    post.save(function(err){
+                        if(err) throw err;
+                        // console.log("before /createchat - socket.join room ");
+                        // console.log("socket.id : " + socket.id);
+                        // console.log("[console.dir] - io.sockets.adapter.rooms :  ");
+                        // console.dir(io.sockets.adapter.rooms);
+                        socket.join(chat_oid);
+
+                        // console.log("after /createchat - socket.join room ");
+                        // console.log("[console.dir] - io.sockets.adapter.rooms :  ");
+                        // console.dir(io.sockets.adapter.rooms);
+                        // console.log("[console.dir] - io.sockets.adapter.rooms[newChat._id] :  ");
+                        // console.dir(io.sockets.adapter.rooms[newChat._id]);
+                        //그 다음??
+                    });
+                });
+                
+                res.send({"chat_oid":chat_oid});
+            });
+        });
+
         socket.on('participantConnedted', function(data){
             // data from client : {"user_oid":userOid, "chat_oid":chatOid}
             console.log('participantConnedted socket E - 채팅방 참여중인 사용자 socket 끊어진 후 재접속');
-            console.dir(data);
+            // console.dir(data);
             console.log('before command JOIN dir io.sockets.adapter.rooms : ')
-            console.dir(io.sockets.adapter.rooms);
-            socket.join(data.chat_oid);
+            // console.dir(io.sockets.adapter.rooms);
+            // socket.join(data.chat_oid);
             
-            console.log('after command JOIN dir io.sockets.adapter.rooms : ')
-            console.dir(io.sockets.adapter.rooms);
+            // console.log('after command JOIN dir io.sockets.adapter.rooms : ')
+            // console.dir(io.sockets.adapter.rooms);
         });
     
         socket.on('message', function(data, callback){
