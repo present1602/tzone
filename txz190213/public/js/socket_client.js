@@ -1,14 +1,11 @@
 console.log('socket_client.js 로드 시작');
 
-var socket;
-
-
 if(!socket){   
     console.log("socket empty try connect")
     console.log('in socket_client.js io in !socket block : ', io);
 
     // socket = io.connect(clientBaseUrl);
-    var socket = io();
+    socket = io();
 }
 
 var chatlist = document.getElementById("chatlist");
@@ -59,55 +56,6 @@ function userLeave(){
 socket.on('connect', function(){ //소켓 끊어졌다 재접속돼도 chatOnId변수값 남아있음
     console.log("socket connected, userOid : " + userOid + ', chatOid : ' + chatOid);
     
-    socket.on('member_join', function(data){
-        // data: {"linkedchat":chatId, "username":localStorage.getItem('username')}); 
-        console.log('member join data : ', data);
-        alert(data.username + "님이 참여했습니다");
-        var countNode = document.getElementById("memberCount")
-        var count = Number(countNode.textContent);
-        count++;
-        countNode.innerHTML = count;
-
-        var postOid = data.linkedpost;
-        var partiCountId = postOid + "_participant_count";
-        var partiCount = document.getElementById(partiCountId);
-        
-        if( partiCount != null){
-            var partiCountVal = partiCount.value;
-            if( partiCountVal && Number(partiCountVal) ){
-                var countUpdated = Number(partiCountVal) +1;          
-                partiCount.value = countUpdated;
-            }
-        }
-
-    })
-
-    socket.on('member_leave', function(data){
-        alert(data.username + "님이 참여를 취소하였습니다");
-        var countNode = document.getElementById("memberCount")
-        var count = Number(countNode.textContent);
-        count--;
-        countNode.innerHTML = count;
-        var postOid = data.post_oid;
-        var partiCountId = postOid + "_participant_count";
-        var partiCount = document.getElementById(partiCountId);
-        
-        if( partiCount != null){
-            var partiCountVal = partiCount.value;
-            if(partiCountVal && Number(partiCountVal) && Number(partiCountVal) > 0){
-                var countUpdated = Number(partiCountVal) -1;          
-                partiCount.value = countUpdated;
-            }else{
-                alert('something wrong to participant count as user leave ')
-            }
-        }
-        
-    })
-    if(chatOid && postOid){
-        console.log("if(chatOid) && postOid -> true 구문 실행"); 
-        socket.emit('participantConnedted', {"user_oid":userOid, "chat_oid":chatOid});
-    }
-     
     webDB.transaction(function(tr){ //basic.js 나 다른 파일로 옮기기?
         var stat = 'create table if not exists ';
         //creted_at : type Date?
@@ -159,6 +107,55 @@ socket.on('connect', function(){ //소켓 끊어졌다 재접속돼도 chatOnId�
         });  
     })
     
+    socket.on('member_join', function(data){
+        // data: {"linkedchat":chatId, "username":localStorage.getItem('username')}); 
+        console.log('member join data : ', data);
+        alert(data.username + "님이 참여했습니다");
+        var countNode = document.getElementById("memberCount")
+        var count = Number(countNode.textContent);
+        count++;
+        countNode.innerHTML = count;
+
+        var postOid = data.linkedpost;
+        var partiCountId = postOid + "_participant_count";
+        var partiCount = document.getElementById(partiCountId);
+        
+        if( partiCount != null){
+            var partiCountVal = partiCount.value;
+            if( partiCountVal && Number(partiCountVal) ){
+                var countUpdated = Number(partiCountVal) +1;          
+                partiCount.value = countUpdated;
+            }
+        }
+
+    })
+
+    socket.on('member_leave', function(data){
+        alert(data.username + "님이 참여를 취소하였습니다");
+        var countNode = document.getElementById("memberCount")
+        var count = Number(countNode.textContent);
+        count--;
+        countNode.innerHTML = count;
+        var postOid = data.post_oid;
+        var partiCountId = postOid + "_participant_count";
+        var partiCount = document.getElementById(partiCountId);
+        
+        if( partiCount != null){
+            var partiCountVal = partiCount.value;
+            if(partiCountVal && Number(partiCountVal) && Number(partiCountVal) > 0){
+                var countUpdated = Number(partiCountVal) -1;          
+                partiCount.value = countUpdated;
+            }else{
+                alert('something wrong to participant count as user leave ')
+            }
+        }
+        
+    })
+    if(chatOid && postOid){
+        console.log("if(chatOid) && postOid -> true 구문 실행"); 
+        socket.emit('participantConnedted', {"user_oid":userOid, "chat_oid":chatOid});
+    }
+     
     
     socket.on('message', function(data){
         console.log('메세지 전송 받음 - jstr data : ' + JSON.stringify(data));
@@ -202,7 +199,7 @@ socket.on('disconnect', function(reason){
     console.log("reason : ", reason)
     // socket.open();
 
-    socket = io.connect(clientBaseUrl);
+    // socket = io.connect(clientBaseUrl);
 
     //추가2) emit('participantDisconnect', ...)
     // if(chatOid){
@@ -255,6 +252,18 @@ function sendMessage(){
                     });    
                 });
                    
+
+
+// db.transaction(function (tx) {
+//     var stat = 'select * from chat_history';
+//     executeSql(insertSQL, [chatOid, messageInput, true, sentAt], function(tr, rs){
+//         console.log('3_채팅 저장 rs.insertId : ' + rs.insertId); 
+//     }, function(tr, err){ 
+//         alert('DB오류 : ' + err.message + err.code);
+//     }); 
+// });
+
+
             }else{
                 //전송실패 메세지 삭제 & 재전송 버튼 처리
                 console.log('socket emit response 못받음');

@@ -25,7 +25,7 @@ var loadpost = function(req,res){
 }
 var posting = function(req,res,next){    //(req,res,next에서 ) next 지움
     console.log('POST /posting  호출');
-    console.log('req.body : ' + JSON.stringify(req.body));
+    // console.log('req.body : ' + JSON.stringify(req.body));
     
     var accessToken = req.headers['x-access-token'];
     console.log('accessToken : ' + accessToken);
@@ -35,7 +35,7 @@ var posting = function(req,res,next){    //(req,res,next에서 ) next 지움
         //next함수로 넘어가는게 아니라 에러를 강제 발생시켜서 프로그램 종료하고 콘솔에만 출력?  //질문
     }
     var token = accessToken.split(' ')[1];
-    console.log('token : ' + token);
+    // console.log('token : ' + token);
     if(!token){
         // return next(new Error('401 Missing Bearer Token'));
         console.log('401 Missing x-access-token'); return;
@@ -56,7 +56,7 @@ var posting = function(req,res,next){    //(req,res,next에서 ) next 지움
             throw new Error("checked x-access-token but failed to find user");
         }
         console.log('UserModel - get user record success');
-        console.log(user._doc);
+        // console.log(user._doc.phone);
         console.log("user._doc.phone : " + user._doc.phone);
         var writerObjectId = user._doc._id;
         var writerName = user._doc.name; 
@@ -89,12 +89,12 @@ var posting = function(req,res,next){    //(req,res,next에서 ) next 지움
         });
         post.save(function(err){
             if(err){ throw err; }
-            console.log("포스트 등록 console.dir(post)");  
+            console.log("post.save() cb");  
             console.log("post._id : " + post._id);
             
             res.send(post);
 
-            console.log('after send post');
+            console.log('=====server posting method end==========');
 
         });
     });

@@ -17,8 +17,6 @@ var socketio = require('socket.io');
 
 process.env.NODE_ENV = process.env.NODE_ENV && ( process.env.NODE_ENV  == 'production' ) ? 'production' : 'development';
 
-
-
 function getServerIp() {
 
     var os = require('os');
@@ -37,7 +35,7 @@ const localIp = getServerIp()
 console.log("localIp : ", localIp);
 
 
-app.set('view engine', 'ejs');
+app.set('view engine', 'ejs'); 
 app.use(morgan('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
@@ -45,7 +43,7 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(express.static('public'));
 app.use(passport.initialize());
 
-var storage = multer.diskStorage({
+var storage = multer.memoryStorage({
     destination : function(req, file, callback){
         callback(null, 'public/uploads')
     },
@@ -56,6 +54,55 @@ var storage = multer.diskStorage({
 var upload = multer({
     storage : storage
 })
+
+
+/*
+const upload = multer(
+    { dest: 'uploads/', 
+     limits: { fileSize: 5 * 1024 * 1024 } 
+    }
+);
+
+var upload = multer({
+    storage : multer.diskStorage({
+        destination : function(req, file, callback){
+            callback(null, 'public/uploads')
+        },
+        filename : function(req, file, callback){
+            callback(null, Date.now()+file.originalname )  //date.now 앞으로 뺌 이미지확장자가 뒤로 와야될것 같아서
+        }
+    })
+})
+*/
+
+/*
+const upload = multer({ dest: 'uploads/', limits: { fileSize: 5 * 1024 * 1024 } });
+문제: uploads 폴더에 뭔가 생성이 되긴 하는데 이름도 ce243370b74107493fea0743d249a176처럼 이상하게 바뀌어있고 확장자도 붙어 있지 않음
+보안상 의도된 것이지만 지금은 불편
+이름이 원래대로 나오게 해보겠습니다. 
+dest 속성 대신 storage 속성을 사용해 upload 변수에 넣어주면 됩니다.
+
+S3같은 곳에 업로드하는 방법은 두가지,
+디스크에 있는 파일을 업로드하거나 / 파일 버퍼(메모리에 저장)를 업로드
+파일을 S3에 업로드한 후에는 남아있는 파일을 지워줘야 하는데 이게 번거로움
+그래서 처음부터 메모리에 파일을 버퍼 형식으로 저장하고, 그것을 업로드
+
+const upload = multer({
+  storage: multer.memoryStorage(),
+});
+
+메모리스토리지를 쓸 경우 
+req.file이나 req.files 안의 파일 데이터(객체)에, 
+디스크스토리지 전용 속성인 destination, filename, path 대신 
+buffer라는 속성이 새로 생기고 그 값으로 버퍼들이 저장됩
+이 버퍼를 사용해서 S3에 버퍼로 업로드하면 됨
+이 방식의 단점은 파일이 여러 개고, 용량이 너무 크면 메모리를 초과해서 서버가 멈춰버릴 수도 있음
+이러한 문제가 걱정되고, 버퍼를 다루는 게 어렵다면 
+multer-s3 패키지를 고려해보세요
+
+https://www.zerocho.com/category/NodeJS/post/5950a6c4f7934c001894ea83
+*/
+
 
 var User = require('./models/usermodel');
 var Post = require('./models/postmodel');
@@ -107,7 +154,6 @@ app.post('/auth_phone', function(req,res){
     res.render('signup')
     // var phone = req.body.phone_input;
     // var authNum = req.body.phone_auth_num;
-    // console.log('authNum : ' + authNum);
     // if(authNum=='1234'){
     //     res.render('signup', {data:phone});
     // }else{
@@ -171,12 +217,9 @@ app.get('/postlist/join', function(req,res){
             });
             
             post.save(function(err){
-                console.log('dbcount 증가 후 콜백 실행');
-                console.log("post : " );
+
                 console.log(post);
                 if(err) throw err; 
-                //채팅방 생성 - 자기 말고 방만든 사람도 아이디 필요
-                
                 
                 res.send(post);
                 // res.send({"post":post, "chat":chat}) 둘다 보내기?
@@ -214,11 +257,13 @@ function isAuthenticated(req,res,next){   //질문 req.isAuthenticated() 정의 
     }
 }
 
-passport.use('local-signup', new LocalStrategy({   //new Local..{} 인증방식을 정의한 객체
-    usernameField : 'phone'
-    ,passwordField:'password'
-    ,passReqToCallback:true
-    }, function(req,phone,password,done){
+passport.use('local-signup', new LocalStrategy(
+    {   //new Local..{} 인증방식을 정의한 객체
+        usernameField : 'phone'
+        ,passwordField:'password'
+        ,passReqToCallback:true
+    }, 
+    function(req,phone,password,done){
         console.log("LocalStrategy 내 function 실행");  
         User.findOne({'phone':phone}, function(err, user){
             if(err) { return done(err);}
@@ -242,10 +287,9 @@ passport.use('local-signup', new LocalStrategy({   //new Local..{} 인증방식�
                 console.log("filename : ", filename)
                 var imageBuffer = decodeBase64Image(profileImageData);
                 var filepath = "public/uploads/" + filename ;
-                console.log("filepath : ", filepath)
     
                 fs.writeFileSync(filepath, imageBuffer.data);
-                user.proflie_image.data =  fs.readFileSync(filepath);
+                // user.proflie_image.data =  fs.readFileSync(filepath);
                 user.proflie_image.contentType= imageBuffer.type;
                 user.proflie_image.path = filepath;
                 user.proflie_image.filename = filename; 
@@ -286,13 +330,13 @@ function socketEvents(){
         socket.remotePort = socket.request.connection._peername.port;
 
         socket.on('disconnect', function(reason){
-            console.log("socket disconnect event, socket.id : ", socket.id)
+            console.log("(server) socket disconnect event, socket.id : ", socket.id)
         })
         console.log('socket.id :', socket.id, ', connection info :', socket.request.connection._peername);
         // 소켓 객체에 클라이언트 Host, Port 정보 속성으로 추가 
         // Client : socket.emit('participantDisconnect', {chat_oid:chatOid, user_oid:userOid})
         socket.on("participantDisconnect", function(data){
-            console.log("소켓 on participantDisconnect 이벤트")
+            console.log("(server) 소켓 on participantDisconnect 이벤트")
            
         })
 
@@ -309,20 +353,22 @@ function socketEvents(){
                 if(err) throw err;
                 var chat_oid = newChat._id;
                 Post.findOne({"_id":post}, function(err, post){
+                    if(err) throw err;
                     post.linkedchat = chat_oid;
                     post.save(function(err){
                         if(err) throw err;
-                        // console.log("before /createchat - socket.join room ");
-                        // console.log("socket.id : " + socket.id);
-                        // console.log("[console.dir] - io.sockets.adapter.rooms :  ");
-                        // console.dir(io.sockets.adapter.rooms);
+                        console.log("before /createchat - socket.join room ");
+                        console.log("socket.id : " + socket.id);
+                        console.log("[console.dir] - io.sockets.adapter.rooms :  ");
+                        console.dir(io.sockets.adapter.rooms);
+
                         socket.join(chat_oid);
 
-                        // console.log("after /createchat - socket.join room ");
-                        // console.log("[console.dir] - io.sockets.adapter.rooms :  ");
-                        // console.dir(io.sockets.adapter.rooms);
-                        // console.log("[console.dir] - io.sockets.adapter.rooms[newChat._id] :  ");
-                        // console.dir(io.sockets.adapter.rooms[newChat._id]);
+                        console.log("after /createchat - socket.join room ");
+                        console.log("[console.dir] - io.sockets.adapter.rooms :  ");
+                        console.dir(io.sockets.adapter.rooms);
+                        console.log("[console.dir] - io.sockets.adapter.rooms[newChat._id] :  ");
+                        console.dir(io.sockets.adapter.rooms[newChat._id]);
                         //그 다음??
                     });
                 });
@@ -333,19 +379,19 @@ function socketEvents(){
 
         socket.on('participantConnedted', function(data){
             // data from client : {"user_oid":userOid, "chat_oid":chatOid}
-            console.log('participantConnedted socket E - 채팅방 참여중인 사용자 socket 끊어진 후 재접속');
+            console.log('(server) participantConnedted socket E - 채팅방 참여중인 사용자 socket 끊어진 후 재접속');
             // console.dir(data);
-            console.log('before command JOIN dir io.sockets.adapter.rooms : ')
-            // console.dir(io.sockets.adapter.rooms);
-            // socket.join(data.chat_oid);
+            console.log('(server) before command JOIN dir io.sockets.adapter.rooms : ')
+            console.log('socket.id : ' + socket.id);
+            socket.join(data.chat_oid);
             
-            // console.log('after command JOIN dir io.sockets.adapter.rooms : ')
-            // console.dir(io.sockets.adapter.rooms);
+            console.log('after command JOIN dir io.sockets.adapter.rooms : ')
+            console.dir(io.sockets.adapter.rooms);
         });
     
         socket.on('message', function(data, callback){
     // content:messageInput, room:chatOnId, senderName:username, senderOid:userObjId
-            console.log("message 이벤트 on jstr data : " + JSON.stringify(data));
+            console.log("(server) message 이벤트 on jstr data : " + JSON.stringify(data));
             var responseData = data;
             responseData.createdAt = Date.now();
             
@@ -362,7 +408,7 @@ function socketEvents(){
 
                     chatroom.save();
                 });
-                console.log("after msg send, [console.dir] - io.sockets.adapter.rooms :  ");            
+                console.log("(server) after msg send, [console.dir] - io.sockets.adapter.rooms :  ");            
                 console.dir(io.sockets.adapter.rooms);
 
                 callback({"is_success":"success"});            
@@ -373,7 +419,7 @@ function socketEvents(){
         
         // Client : socket.emit('join', {"linkedchat":chatId, "username":localStorage.getItem('username')}); 
         socket.on('join', function(data){ 
-            console.log('클라이언트로부터 join 이벤트 받음');
+            console.log('(server) 클라이언트로부터 join 이벤트 받음');
             console.log('jstr data : ' + JSON.stringify(data));
             console.log('before join dir io.sockets.adapter.rooms : ')
             console.dir(io.sockets.adapter.rooms);
@@ -386,7 +432,7 @@ function socketEvents(){
         socket.on('leave', function(data, callback){
 
             //(From client) var data = {"user_oid":uoid, "username":uname, "post_oid":poid, "chat_oid":coid};
-            console.log('leave event, data : ', data)
+            console.log('(server) get socket leave event, data : ', data)
             socket.to(data.chat_oid).emit('member_leave', data)
             Post.findOne({"_id":data.post_oid}).select("participant_count").exec(function(err, post){
                 if(err) throw err;
