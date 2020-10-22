@@ -3,7 +3,7 @@ console.log('socket_client.js 로드 시작');
 if(!socket){   
     console.log("socket empty try connect")
     console.log('in socket_client.js io in !socket block : ', io);
-
+    
     // socket = io.connect(clientBaseUrl);
     socket = io();
 }
@@ -169,7 +169,8 @@ socket.on('connect', function(){ //소켓 끊어졌다 재접속돼도 chatOnId�
 
         var printMessage = '<li class="messageListItem">';
         printMessage += '<div class="userInfo">'
-           + '<img class="profileImage" src="uploads/' + senderPic + '">' 
+        //    + '<img class="profileImage" src="uploads/' + senderPic + '">' 
+           + '<img class="profileImage" src="https://bucket-tz-20201021.s3.ap-northeast-2.amazonaws.com/' + senderPic + '">' 
            + '<p class="senderName">' + senderName + '</p>'
            + '</div>'
            + '<div class="messageInfo">'

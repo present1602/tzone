@@ -15,6 +15,39 @@ var jwt = require('jsonwebtoken');
 var LocalStrategy = require('passport-local').Strategy; 
 var socketio = require('socket.io');
 
+// const uuid = require('uuid/v4')
+const { v4: uuidv4 } = require('uuid');
+
+const configData = require('./config');
+
+
+require('dotenv/config')
+
+
+const AWS = require('aws-sdk');
+const multerS3 = require('multer-s3');
+
+// AWS.config.region='ap-northeast-2';
+AWS.config.update({
+	accessKeyId : process.env.AWS_ID,
+    secretAccessKey : process.env.AWS_SECRET
+});
+
+const s3 = new AWS.S3();
+
+// console.log("process.env : ", process.env);
+console.log("process.env.AWS_ID : ", process.env.AWS_ID);
+console.log("process.env.AWS_SECRET : ", process.env.AWS_SECRET);
+console.log("process.env.AWS_BUCKET_NAME : ", process.env.AWS_BUCKET_NAME);
+
+
+// const s3 = new AWS.S3({
+// 	accessKey : process.env.AWS_ID,
+// 	secretAccessKey : process.env.AWS_SECRET
+// });
+
+// console.log("s3 init : ", s3);
+
 process.env.NODE_ENV = process.env.NODE_ENV && ( process.env.NODE_ENV  == 'production' ) ? 'production' : 'development';
 
 function getServerIp() {
@@ -43,17 +76,43 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(express.static('public'));
 app.use(passport.initialize());
 
+
+// var storage = multer.memoryStorage({
+//     destination : function(req, file, callback){
+//         callback(null, 'public/uploads')
+//     },
+//     filename : function(req, file, callback){
+//         callback(null, Date.now()+file.originalname )  //date.now 앞으로 뺌 이미지확장자가 뒤로 와야될것 같아서
+//     }
+// });
+
+
 var storage = multer.memoryStorage({
     destination : function(req, file, callback){
-        callback(null, 'public/uploads')
+        callback(null, '')
     },
-    filename : function(req, file, callback){
-        callback(null, Date.now()+file.originalname )  //date.now 앞으로 뺌 이미지확장자가 뒤로 와야될것 같아서
-    }
 });
 var upload = multer({
     storage : storage
 })
+
+// const upload = multer({
+//     storage: multerS3({
+//         s3: s3,
+//         bucket: process.env.AWS_BUCKET_NAME, // 버킷 이름
+//         contentType: multerS3.AUTO_CONTENT_TYPE, // 자동을 콘텐츠 타입 세팅
+//         acl: 'public-read-write', // 클라이언트에서 자유롭게 가용하기 위함
+//         key: (req, file, cb) => {
+//             console.log(file);
+//             cb(null, file.originalname)
+//         },
+//     }),
+//     limits: { fileSize: 5 * 1024 * 1024 }, // 용량 제한
+// });
+
+
+
+
 
 
 /*
@@ -117,7 +176,6 @@ function connectDB(){
     console.log("process.env.NODE_ENV : ", process.env.NODE_ENV);
     console.log("process.env.PORT : ", process.env.PORT);
     
-    var configData = require('./config');
 
     var databaseUrl = `mongodb://${configData.dbuser}:${configData.dbpw}@${configData.mlab_db}`;
     mongoose.Promise = global.Promise;
@@ -175,6 +233,7 @@ app.get('/login', function(req,res){
 app.post('/login', routeUser.login);
 app.post('/signup', upload.array('profile_image', 1), function(req,res){
     console.log("post /signup")
+
     passport.authenticate('local-signup', {session:false}, function(err, user)  {
         if(err) throw err;
         if(user){
@@ -247,7 +306,7 @@ function isAuthenticated(req,res,next){   //질문 req.isAuthenticated() 정의 
     if(!token){
         return next(new Error('401 Missing Bearer Token'));
         // console.log('401 Missing Bearer Token');
-        res.redirect('/login');
+        // res.redirect('/login');
     }
 
     var authenticated = jwt.verify(token, 'abc123'); 
@@ -265,6 +324,8 @@ passport.use('local-signup', new LocalStrategy(
     }, 
     function(req,phone,password,done){
         console.log("LocalStrategy 내 function 실행");  
+
+
         User.findOne({'phone':phone}, function(err, user){
             if(err) { return done(err);}
             if(user){
@@ -272,6 +333,57 @@ passport.use('local-signup', new LocalStrategy(
                 return done(null, false);
             }
             
+
+            console.log("req.files[0] : ", req.files[0] );
+
+            var phone = req.body.phone;
+            var password = req.body.password;
+            var name = req.body.username;
+            var gender = req.body.gender;
+            var email = req.body.email;
+            var user = new User({'phone':phone, 'hashed_password':password, 
+            'name':name, 'gender':gender, 'email':email});
+            var profileFile = req.files[0];
+            
+            if(profileFile){
+                // var filename = email.substr(0, 4) + phone.substr(phone.length-4, phone.length) +".png";
+
+                let myFile = profileFile.originalname.split(".")
+                const fileType = myFile[myFile.length - 1]
+                
+                user.proflie_image.filename = `${uuidv4()}.${fileType}`;
+
+                // console.log("filename : ", filename)
+                // user.proflie_image.filename = filename; 
+                // console.log("process.env.AWS_BUCKET_NAME : ", process.env.AWS_BUCKET_NAME)
+            
+
+                // console.log("s3 : ", s3);
+
+                const params = {
+                    Bucket : process.env.AWS_BUCKET_NAME,
+                    Key : `${uuidv4()}.${fileType}`,
+                    Body : req.files[0].buffer
+                }
+                // region: 'ap-northeast-2'
+                s3.upload(params, (err, data) => {
+                    if(err){
+                        console.log("err while s3 upload, err : ", err);
+                    }
+                    console.log("image file s3 upload success, data : ", data);
+                })
+            }        
+
+            user.save(function(err){
+                if(err){throw err};
+                console.log("사용자 데이터 추가함.");
+                return done(null, user);  
+            });
+
+
+            // originalname, fieldname(input name val), encoding(7bit), mimeType(image/name.png), buffer, size
+            
+            /* 
             var phone = req.body.phone;
             var password = req.body.password;
             var name = req.body.username;
@@ -279,6 +391,7 @@ passport.use('local-signup', new LocalStrategy(
             var email = req.body.email;
             // var profileImage = req.files[0];
 
+            // req.body.profileImageData.value='' = canvas.toDataURL("image/png")
             var profileImageData = req.body.profileImageData;  
             var user = new User({'phone':phone, 'hashed_password':password, 
                 'name':name, 'gender':gender, 'email':email});
@@ -289,7 +402,8 @@ passport.use('local-signup', new LocalStrategy(
                 var filepath = "public/uploads/" + filename ;
     
                 fs.writeFileSync(filepath, imageBuffer.data);
-                // user.proflie_image.data =  fs.readFileSync(filepath);
+
+                user.proflie_image.data =  fs.readFileSync(filepath);
                 user.proflie_image.contentType= imageBuffer.type;
                 user.proflie_image.path = filepath;
                 user.proflie_image.filename = filename; 
@@ -312,6 +426,7 @@ passport.use('local-signup', new LocalStrategy(
                 response.data = new Buffer(matches[2], 'base64');
                 return response;
             }
+            */
         });
     })
 );
@@ -410,7 +525,7 @@ function socketEvents(){
                 });
                 console.log("(server) after msg send, [console.dir] - io.sockets.adapter.rooms :  ");            
                 console.dir(io.sockets.adapter.rooms);
-
+                
                 callback({"is_success":"success"});            
             });
         });
