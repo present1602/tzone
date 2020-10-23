@@ -5,3 +5,5 @@ package-lock.json
 config.js
 
 .env
+
+awsconfig.json
