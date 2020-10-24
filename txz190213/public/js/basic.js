@@ -161,6 +161,10 @@ function showCurPos() {
     };
     map = new daum.maps.Map(mapContainer, mapOption);
 
+    function error(err) {
+        console.warn('ERROR(' + err.code + '): ' + err.message);
+    };
+
     if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(function (pos) {
             console.log('nav geo 접근')
@@ -168,6 +172,9 @@ function showCurPos() {
             lat = pos.coords.latitude;
             lng = pos.coords.longitude;
             mapContainer = document.getElementById('map') // 지도를 표시할 div 
+            console.log("lat : " + lat + ", lng : " + lng);
+
+            
             mapOption = {
                 center: new daum.maps.LatLng(lat, lng), // 지도의 중심좌표
                 level: 6// 지도의 확대 레벨
@@ -191,7 +198,9 @@ function showCurPos() {
                     departDataOn.lng = lng;
                     isDepartSelected = true;
                 } else {
-                    alert("현재 위치 좌표값으로 주소 불러오지 못함");
+                    console.log("geocoder.coord2Address status err ");
+                    console.log("status : ", status)
+                    console.log("daum.maps.services.Status.OK : ", daum.maps.services.Status.OK)
                 }
 
             });
@@ -236,11 +245,16 @@ function showCurPos() {
                     }
                 });
             });
-        });
+        }, 
+        error,
+        { maximumAge: 3000, timeout: 5000, enableHighAccuracy: true }
+        );
 
 
     }
 }
+
+
 
 
 function placeSearchHandler(keyword, psWrap, listBox, seperator) {
