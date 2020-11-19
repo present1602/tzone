@@ -16,6 +16,7 @@
 #postingSuccessWrap{width:100%; background-color:#fff; height:100vh; 
     position:absolute; top:0; left:0; z-index:111111
 };
+
 .floatIcon{z-index:1000}
 #postingIcon{z-index:10000}
 #chatIcon{z-index:10001}
@@ -179,13 +180,31 @@ tr td{vertical-align:middle}
 
 /* 참여중인 포스트정보 페이지, basic.js printPostInfoPage()에서 삽입 */
 #postJoinView{padding:0.5rem; position:relative; }
+#postJoinViewContentBox{
+    padding: 0 7%;
+}
+
+
 .postJoinViewItem{font-size:13px; font-size: 0.9rem; margin:14px 0;
-    font-family:"나눔고딕", "dotum"; font-weight: bold; margin: 15px 5px; color:rgba(78,78,78,1)}
-.postItemName{    display: inline-block;
-    width: 68px; color: rgba(119,119,119,1);}
-#cancel{    text-align: right;
+    font-family:"나눔고딕", "dotum"; font-weight: bold; margin: 15px 5px; color:rgba(78,78,78,1);
+    line-height: 1.7em;
+}
+/* .postItemName{    display: inline-block;
+    width: 68px; color: rgba(119,119,119,1);} */
+.postViewItemSpan{
+    font-weight: bold;
+    display: inline-block;
+    width: 66px;
+    font-size: 1.1em;
+}
+#joinCancelButton{    
+    text-align: right;
     border: 1px solid rgba(212,212,212,1); color:red;padding:3px 7px; font-size:13px;
-    display: inline-block; margin-top:5px;}
+    display: inline-block; margin-top:5px;
+    font-size: 1em;
+    padding: 2% 4%;
+    margin-top: 12px;
+}
 /* ========== 포스트정보페이지 끝 =========== */
 
 
@@ -196,7 +215,7 @@ tr td{vertical-align:middle}
 #postSuccessMessage{text-align:center; height:80px; font-size:20px; font-weight:bold;text-align:center;
  color:rgba(7,173,132,1); line-height:80px;}
 .postSuccessItem{display:flex; font-size:13px; margin:6px; line-height:2.3em}
-.postSuccessItemSpan{
+.postItemSpan{
     font-weight: bold;
     display: inline-block;
     width: 66px;

@@ -551,12 +551,16 @@ function printPostInfoPage(post) {
     postJoinView.setAttribute("id", "postJoinView");
     postJoinContent = "";
     postJoinContent += '<div class="subWrapHeader" ><img id="postViewClose" class="backIcon" src="/images/back.gif"></div>';
-    postJoinContent += '<p class="postJoinViewItem"><span class="postItemName">출발</span>' + departPlace + '</p>';
-    postJoinContent += '<p class="postJoinViewItem"><span class="postItemName">도착</span>  ' + arrivePlace + '</p>';
-    postJoinContent += '<p class="postJoinViewItem"><span class="postItemName">출발시간</span>  ' + departTime + '</p>';
-    postJoinContent += '<p class="postJoinViewItem"><span class="postItemName">모집인원</span>  ' + joinLimit + '</p>';
-    postJoinContent += '<p class="postJoinViewItem"><span class="postItemName">메세지</span>' + message + '</p>';
-    postJoinContent += '<p id="cancel" onclick="userLeave()">참여취소</p>';  //userLeave() : socket_client.js
+    
+    postJoinContent += '<div id="postJoinViewContentBox">';
+    postJoinContent += '<p class="postJoinViewItem"><span class="postViewItemSpan">출발</span>' + departPlace + '</p>';
+    postJoinContent += '<p class="postJoinViewItem"><span class="postViewItemSpan">도착</span>  ' + arrivePlace + '</p>';
+    postJoinContent += '<p class="postJoinViewItem"><span class="postViewItemSpan">출발시간</span>  ' + departTime + '</p>';
+    postJoinContent += '<p class="postJoinViewItem"><span class="postViewItemSpan">모집인원</span><span style="font-size:1.2em; padding-left:2x;">' + joinLimit + '<span></p>';
+    postJoinContent += '<p class="postJoinViewItem"><span class="postViewItemSpan">메세지</span>' + message + '</p>';
+    postJoinContent += '<p id="joinCancelButton" onclick="userLeave()">참여취소</p>';  //userLeave() : socket_client.js
+    postJoinContent += '</div>'
+
 
     postJoinView.innerHTML = postJoinContent;
     $("#postJoinViewWrap").append(postJoinView);
