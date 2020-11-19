@@ -3,8 +3,13 @@ console.log('load basic.js 시작');
 var clientBaseUrl = '';
 
 
-var lng = 126.6531160; //위치 못가져오는 경우 초기 맵 띄위기 변수
-var lat = 37.4496270;
+var lng = "";  
+var lat = ""; 
+
+//위치 못가져오는거나 에뮬레이터에서 이상한 값 가져오는 경우 초기 맵 띄위기 변수
+var defaultLat = "37.4496270";
+var defaultLng = "126.6531160";
+
 var isDepartSelected = false;
 var isArriveSelected = false;
 
@@ -165,6 +170,11 @@ function showCurPos() {
         mapContainer = document.getElementById('map') // 지도를 표시할 div 
         console.log("lat : " + lat + ", lng : " + lng);
 
+        if( !(lat > 33 && lat < 38 && lng >126 && lng < 130) ){
+            console.log("설정된 좌표 범위를 벗어났습니다");
+            lat = defaultLat;        
+            lng = defaultLng;
+        }
         
         mapOption = {
             center: new daum.maps.LatLng(lat, lng), // 지도의 중심좌표
@@ -242,6 +252,8 @@ function showCurPos() {
 
     function currentPositionErr(err) {
         console.warn('ERROR(' + err.code + '): ' + err.message);
+        lat = defaultLat;
+        lng = defaultLng;
         showCurrentMap(lat, lng);
     };
 
