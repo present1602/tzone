@@ -484,7 +484,6 @@ function socketEvents() {
                         console.dir(io.sockets.adapter.rooms);
                         console.log("[console.dir] - io.sockets.adapter.rooms[newChat._id] :  ");
                         console.dir(io.sockets.adapter.rooms[newChat._id]);
-                        //그 다음??
                     });
                 });
 
@@ -570,8 +569,7 @@ function socketEvents() {
                     Post.findOneAndUpdate({ "_id": data.post_oid}, {$set:{participant_count:partiCount}}, (err, doc) => {
                         if (err) {
                             console.log("participant count update err ", err);
-                        }
-                        console.log("findAndUpdate doc : ", doc);         
+                        }      
                     })
                     
                 } else if (partiCount == 1) {
@@ -600,14 +598,14 @@ function socketEvents() {
             })
             Chat.findOne({ "_id": data.chat_oid }).select("participants").exec(function (err, chat) {
                 if (err) throw err;
-                console.log('before chat.participants : ', chat.participants)
+                console.log('before chat.participants.length : ', chat.participants.length)
                 var getIdx = chat.participants.findIndex(function (participant) {
                     return participant.user == data.user_oid;
                 })
 
                 console.log("getIdx : ", getIdx);
                 chat.participants.splice(getIdx, 1);
-                console.log('after chat.participants : ', chat.participants)
+                console.log('after chat.participants.length : ', chat.participants.length)
                 chat.save()
             })
             Chat.update({ "_id": data.chat_oid }, { $pull: { participants: data.user_oid } })
