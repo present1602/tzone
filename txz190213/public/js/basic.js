@@ -7,8 +7,13 @@ var lng = "";
 var lat = ""; 
 
 //위치 못가져오는거나 에뮬레이터에서 이상한 값 가져오는 경우 초기 맵 띄위기 변수
-var defaultLat = "37.4496270";
-var defaultLng = "126.6531160";
+// var defaultLat = "37.4496270";
+// var defaultLng = "126.70459503";
+
+//인천시청
+var defaultLat = "37.456004465652136";
+var defaultLng = "126.7052580700657";
+
 
 var isDepartSelected = false;
 var isArriveSelected = false;
