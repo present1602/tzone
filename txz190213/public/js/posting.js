@@ -140,11 +140,10 @@ function processPosting() {
             var postingSuccessContent = "";
             postingSuccessContent += '<p id="postSuccessMessage">모집글이 등록되었습니다</p>';
             postingSuccessContent += '<div id="postingSuccesInfoBox">'
-            postingSuccessContent += '<p class="postSuccessItem">출발 : ' + departPlace + '</p>';
-            postingSuccessContent += '<p class="postSuccessItem">도착 : ' + arrivePlace + '</p>';
-            postingSuccessContent += '<p class="postSuccessItem">출발시간 : ' + departTime + '</p>';
-            postingSuccessContent += '<p class="postSuccessItem">모집인원 : ' + joinLimit + '</p>';
-            postingSuccessContent += '<p class="postSuccessItem" style="overflow:hidden;white-space:nowrap;text-overflow:ellipsis">메세지 : ' + message + '</p>';
+            postingSuccessContent += '<p class="postSuccessItem"><span class="postSuccessItemSpan">출발</span><span class="postSuccessItemTextSpan">' + departPlace + '</span></p>';
+            postingSuccessContent += '<p class="postSuccessItem"><span class="postSuccessItemSpan">도착</span><span class="postSuccessItemTextSpan">' + arrivePlace + '</span></p>';
+            postingSuccessContent += '<p class="postSuccessItem"><span class="postSuccessItemSpan">모집인원</span><span class="postSuccessItemTextSpan">' + joinLimit + '</span></p>';
+            postingSuccessContent += '<p class="postSuccessItem" id="postSuccessItemMessage"><span class="postSuccessItemSpan">메세지</span><span class="postSuccessItemTextSpan">' + message + '</span></p>';
             postingSuccessContent += '</div>'
             postingSuccessContent += '<p id="postingSuccessConfirm">확인</p>';
             postingSuccess.innerHTML = postingSuccessContent;

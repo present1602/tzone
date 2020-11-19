@@ -523,7 +523,8 @@ function insertPostSum(departPlace, arrivePlace, joinCount, joinRestrict) {
     postSumContent += '<span class="placenameInPostJoinSum">' + arrivePlace + "</span>"
     postSumContent += '</p>'
     postSumContent += '<span id="participantNumberInJoinSummary">'
-    postSumContent += '<span id="memberCount">' + joinCount + '</span>'
+    postSumContent += '<span id="memberCount">' + joinCount + ' / </span>'
+    postSumContent += '<span id="memberCount">' + joinRestrict + '</span>'
     postSumContent += '명</span>'
     postJoinSum.innerHTML = postSumContent;
     $("#wrap").prepend(postJoinSum);

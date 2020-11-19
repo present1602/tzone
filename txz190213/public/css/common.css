@@ -166,9 +166,12 @@ tr td{vertical-align:middle}
     outline:1px solid rgba(212,212,212,1); font-size:13px; position:relative;
     font-family:'gulim'; font-weight:bold; padding:14px 0;}
 #postJoinMarker{color:green; 
-    display:inline-block;position:absolute;width:46px; font-size:14px; top:13px; left:9px
+    display:inline-block;position:absolute;width:46px; font-size:14px; top:13px; left:9px;
+    padding-top:2px;
 } 
-#postSumFromTo{padding:0 50px 0 60px; line-height:15px;}
+#postSumFromTo{padding: 0 60px 0 55px;
+    line-height: 18px;
+}
 
 #participantNumberInJoinSummary{position:absolute; font-size:14px; color:darkblue; top:14px; right:16px;}
 /* 참여중인 방 상단 삽입 배너 끝 */
@@ -189,10 +192,24 @@ tr td{vertical-align:middle}
 /*포스팅 완료페이지  posting.js processPosting()에서 삽입 */
 
 #postingSuccessBox{width: 100%; padding: 0; margin:0 auto; text-align:center;}
-#postingSuccesInfoBox{ margin: 0 auto; width: 85%;}
+#postingSuccesInfoBox{ margin: 0 auto; width: 85%; text-align:left }
 #postSuccessMessage{text-align:center; height:80px; font-size:20px; font-weight:bold;text-align:center;
  color:rgba(7,173,132,1); line-height:80px;}
-.postSuccessItem{font-size:13px; font-weight:bold;margin:6px;}
+.postSuccessItem{display:flex; font-size:13px; margin:6px; line-height:2.3em}
+.postSuccessItemSpan{
+    font-weight: bold;
+    display: inline-block;
+    width: 66px;
+    font-size: 1.2em;
+}
+.postSuccessItemTextSpan{
+    font-size: 1.1em;
+
+}
+#postSuccessItemMessage{
+    overflow:hidden;white-space:nowrap;text-overflow:ellipsis
+}
+
 
 #postingSuccessConfirm{ font-size: 20px; color:white; margin-top:12px;
     padding: 10px; background-color: rgba(7,173,132,1); width: 100px; margin:20px auto;
