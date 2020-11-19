@@ -67,12 +67,44 @@ menubarIcon.addEventListener("click", function (e) {
 })
 
 function logout() {
-    alert("로그아웃하였습니다");
-    // if(localStorage.getItem('chat_on')){
-    //     console.log('localStorage.getItem("chat_oid") true 참여중인 방 있음 로그아웃 불가 return ');
-    //     console.log('chatOnId : ' + chatOnId + ', postOnId : ' + postOnId);
-    //     return;
-    // }
+    
+    if(localStorage.getItem('chat_on')){
+        if( confirm("로그아웃 시 참여중인 방에서 퇴장됩니다. 로그아웃하시겠습니까?") ) {
+            var data = {"user_oid":userOid, "username":username, "post_oid":postOid, "chat_oid":chatOid};
+            console.log("참여취소 - data : ", data);
+            socket.emit('leave', data, function(response){
+                console.log("leave event 전달, cb 실행 - response : ", response);
+    
+                if(response.is_success="success"){
+                    
+                    webDB.transaction(function (tx) {
+                        var deleteSQL = 'DELETE FROM chat_history';
+                        tx.executeSql(deleteSQL);
+                    });
+    
+                    alert("방에서 퇴장하였습니다");
+                
+                    $("#postJoinViewWrap").css("display", "none").html("");
+    
+                    var postSum = document.getElementById("postJoinSum");
+                    postSum.parentNode.removeChild(postSum);
+    
+                    localStorage.removeItem("chat_on")
+                    localStorage.removeItem("post_oid")
+                    
+                    var authToken = localStorage.getItem('x-access-token');
+                    if(authToken){
+                        loadIndex(authToken);
+                    }
+                }
+            });
+        }else{
+            return;
+        }
+        console.log('localStorage.getItem("chat_oid") true 참여중인 방 있음 로그아웃 불가 return ');
+        console.log('chatOnId : ' + chatOnId + ', postOnId : ' + postOnId);
+        
+    }
 
     localStorage.removeItem('x-access-token');
     localStorage.removeItem('username');
@@ -248,6 +280,8 @@ function showCurPos() {
                 }
             });
         });
+
+        
     }
 
     function currentPositionErr(err) {
@@ -533,7 +567,7 @@ function join(e) {
     var targetContentNode = e.target.parentNode;
     // if(!(postOid==null || undefined))   
     var targetPost = targetContentNode.getElementsByClassName('post_oid')[0].value;
-
+    
 
     console.log("1) postOid : " + postOid);
     if (postOid == targetPost) {
