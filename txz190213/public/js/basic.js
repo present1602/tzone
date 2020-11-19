@@ -51,7 +51,8 @@ if (chatOid && postOid) {
             var departPlace = post.dep_placeinfo.placename;
             var arrivePlace = post.arv_placeinfo.placename;
             var joinCount = post.participant_count;
-            insertPostSum(departPlace, arrivePlace, joinCount);
+            var joinRestrict = post.join_restrict;
+            insertPostSum(departPlace, arrivePlace, joinCount, joinRestrict);
             printPostInfoPage(post)
         }
         , error: function (err) {
@@ -107,7 +108,7 @@ function logout() {
             return;
         }
         console.log('localStorage.getItem("chat_oid") true 참여중인 방 있음 로그아웃 불가 return ');
-        console.log('chatOnId : ' + chatOnId + ', postOnId : ' + postOnId);
+        // console.log('chatOnId : ' + chatOnId + ', postOnId : ' + postOnId);
         
     }
 
@@ -512,7 +513,7 @@ function processShowPosts() {
 //     //sibling, parentNode 사용 어떤 게 나은가?
 
 
-function insertPostSum(departPlace, arrivePlace, joinCount) {
+function insertPostSum(departPlace, arrivePlace, joinCount, joinRestrict) {
 
     var postJoinSum = document.createElement('div'); //ok
     postJoinSum.setAttribute("id", "postJoinSum"); //ok
@@ -530,7 +531,6 @@ function insertPostSum(departPlace, arrivePlace, joinCount) {
     $("#postJoinSum").click(function (e) {
         var postWrap = document.getElementById("postJoinViewWrap");
         openPage(postWrap, "viewpost")
-
     });
 
 };
@@ -603,11 +603,11 @@ function join(e) {
                 var arrivePlace = post.arv_placeinfo.placename;
                 // var departTime = post.depart_time;
                 var joinCount = post.participant_count;
-                // var joinLimit = post.join_restrict;
+                var joinRestrict = post.join_restrict;
                 // var message = post.message;
 
 
-                insertPostSum(departPlace, arrivePlace, joinCount); //참여중인 포스트 요약 정보 배너
+                insertPostSum(departPlace, arrivePlace, joinCount, joinRestrict); //참여중인 포스트 요약 정보 배너
                 printPostInfoPage(post) //포스팅 상세페이지 삽입
 
                 var chatId = post.linkedchat;

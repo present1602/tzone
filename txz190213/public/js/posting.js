@@ -155,7 +155,7 @@ function processPosting(){
                 $postingSuccessWrap.html("");
                 $postingSuccessWrap.css("display", "none");
                 // history.back();  ??
-                processShowPosts();
+                // processShowPosts();
             });
 
             handleHistoryAfterPosting()

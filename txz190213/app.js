@@ -575,7 +575,26 @@ function socketEvents() {
                     })
                     
                 } else if (partiCount == 1) {
-                    Post.findOne({ "_id": data.post_oid }).remove().exec();
+                    Post.findOne({ "_id": data.post_oid }).remove().exec(function(err, result){
+                        if (err) throw err;
+                        if(result){
+                            // console.log("result1 : ", result)
+                            if(result.deletedCount > 0){
+                                Chat.findOne({ "linkedpost": data.post_oid }).remove().exec(function(err, result){
+                                    if (err) throw err;
+                                    if(result){
+                                        console.log("delete linkedChat doc - result : ", result.deletedCount)
+                                    }
+                                });                        
+                            }
+                        }
+                    });
+                    // Chat.findOne({ "linkedpost": data.post_oid }).remove().exec(function(err, result2){
+                    //     if (err) throw err;
+                    //     if(result2){
+                    //         console.log("result2 : ", result2)
+                    //     }
+                    // });
                 }
                 console.log("member leave - updated partiCount : " + partiCount)
             })
