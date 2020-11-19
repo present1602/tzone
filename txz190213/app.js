@@ -182,7 +182,7 @@ function connectDB() {
         console.log('데이터베이스에 연결되었습니다 ');
 
         routeUser.init(User);
-        routePost.init(Post, User);
+        routePost.init(Post, User, Chat);
 
         socketEvents();
 

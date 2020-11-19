@@ -23,6 +23,7 @@ function userLeave(){
         console.log('if !socket 블록 아래 실행');
 
         var data = {"user_oid":userOid, "username":username, "post_oid":postOid, "chat_oid":chatOid};
+        console.log("참여취소 - data : ", data)
         socket.emit('leave', data, function(response){
             console.log("leave event 전달, cb 실행 - response : ", response);
 

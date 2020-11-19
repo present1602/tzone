@@ -474,11 +474,17 @@ function togglePlaceSearchMap() {
 
 function processShowPosts() {
     console.log('processShowPosts 호출');
-
+    var formData = $("#mainSearchForm").serializeArray();
+    var joinChatOid = localStorage.getItem("chat_on");
+    // debugger;
+    if( joinChatOid != null && joinChatOid != ""){
+        formData.push({"name":"joinChatOid", "value":joinChatOid});
+    }
+    console.log("formData : ", formData);
     $.ajax({
         url: "/showposts"
         , method: 'POST'
-        , data: $("#mainSearchForm").serializeArray()
+        , data: formData
         // ,dataType:
         , success: function (postlistEjs) {
 

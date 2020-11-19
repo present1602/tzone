@@ -105,34 +105,64 @@ var showposts = function(req,res){
     console.log('post.js showposts 호출');
     console.log(req.body); //str json?
     //좌표로만 검색? depPlace, arvPlace 필요 없음?
+
     var depPlace = req.body.departInput;
     var arvPlace = req.body.arriveInput;
     var departLng = req.body.departLngInMain;
     var departLat = req.body.departLatInMain;
     var arriveLng = req.body.arriveLngInMain;
     var arriveLat = req.body.arriveLatInMain;
+    var joinChatOid = req.body.joinChatOid;
     console.log("depPlace : " + depPlace);
     console.log("arvPlace : " + arvPlace);
     
-    // var r2;
-    // query.where('dep_geometry').within().circle({ center: dep_geometry.coordinates, radius: r});
+    console.log("joinChatOid : ", joinChatOid);
+    
+    
+    if( joinChatOid != undefined ){
+        var ObjectId = require('mongodb').ObjectId; 
+        Chat.findOne(new ObjectId(joinChatOid)).select("linkedpost").exec(function(err, result) {
+            if(err) throw err;
+            if(result && result.linkedpost){
+                console.log('linkedpost Object result : ', result);
+                var query = Post.find({"_id": {$ne : result.linkedpost} });
+                query.where('dep_geometry').within({ center: [parseFloat(departLng), parseFloat(departLat)]
+                    ,radius: 2000/6371   //1/6371 : 1km    //,unique : true, spherical : true?
+                }).limit(8);
+                query.where('arv_geometry').within({ center: [parseFloat(arriveLng), parseFloat(arriveLat)]
+                    ,radius: 500/6371
+                }); 
+                query.limit(6).exec(function(err, results) {
+                    if(err) throw err;
+                    if(results){
+                        console.log('출발지 도착지로 포스트 검색 검색결과문서들 가져옴 - results.length : ' + results.length);
+                        res.render('postlist', {posts:results});    
+                    }
+                });
+            }
+            // Post.find({"joinChatOid": {$elemMatch: {}} }).populate('writer', 'name gender'); 
+            // User.find({ "userLog": {$elemMatch: { logflag: true}}})
+        });
+    
+    }else{
+        var query = Post.find({});
+        query.where('dep_geometry').within({ center: [parseFloat(departLng), parseFloat(departLat)]
+            ,radius: 2000/6371   //1/6371 : 1km    //,unique : true, spherical : true?
+        }).limit(8);
+        query.where('arv_geometry').within({ center: [parseFloat(arriveLng), parseFloat(arriveLat)]
+            ,radius: 500/6371
+        }); 
+        query.limit(6).exec(function(err, results) {
+            if(err) throw err;
+            if(results){
+                console.log('출발지 도착지로 포스트 검색 검색결과문서들 가져옴 - results.length : ' + results.length);
+                res.render('postlist', {posts:results});    
+            }
+        });
+    }
 
-    var query = Post.find(); 
-    //var query = Post.find().populate('writer', 'name gender'); 
-    // 현재까진 필요없음. //포스트 저장 시 User.findOne 구문 없애면 필요
-    query.where('dep_geometry').within({ center: [parseFloat(departLng), parseFloat(departLat)]
-        ,radius: 2000/6371   //1/6371 : 1km    //,unique : true, spherical : true?
-       }).limit(8);
-    query.where('arv_geometry').within({ center: [parseFloat(arriveLng), parseFloat(arriveLat)]
-        ,radius: 500/6371
-       }); 
-    query.limit(6).exec(function(err, results) {
-        if(err) throw err;
-        if(results){
-            console.log('출발지 도착지로 포스트 검색 검색결과문서들 가져옴 - results.length : ' + results.length);
-            res.render('postlist', {posts:results});    
-        }
-    });
+
+
     // var query = Post.find();
     // query.where('dep_geometry').near(
     //     {center:{type:'Point', coordinates:[parseFloat(departLng), parseFloat(departLat)]}} 
