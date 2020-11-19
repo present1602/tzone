@@ -549,15 +549,35 @@ function socketEvents() {
             //(From client) var data = {"user_oid":uoid, "username":uname, "post_oid":poid, "chat_oid":coid};
             console.log('(server) get socket leave event, data : ', data)
             socket.to(data.chat_oid).emit('member_leave', data)
+
+            // Post.findOneAndUpdate({"_id": data.post_oid}, {$set:{name:"Naomi"}}, {new: true}, (err, doc) => {
+            //     if (err) {
+            //         console.log("Something wrong when updating data!");
+            //     }
+            
+            //     console.log(doc);
+            // });
+
             Post.findOne({ "_id": data.post_oid }).select("participant_count").exec(function (err, post) {
                 if (err) throw err;
                 var partiCount = post.participant_count
+
+                console.log("member leave - partiCount : " + partiCount)
                 if (partiCount > 1) {
+                    console.log("member leave - partiCount > 1 ")
+
                     partiCount = partiCount - 1;
-                    post.save();
+                    Post.findOneAndUpdate({ "_id": data.post_oid}, {$set:{participant_count:partiCount}}, (err, doc) => {
+                        if (err) {
+                            console.log("participant count update err ", err);
+                        }
+                        console.log("findAndUpdate doc : ", doc);         
+                    })
+                    
                 } else if (partiCount == 1) {
                     Post.findOne({ "_id": data.post_oid }).remove().exec();
                 }
+                console.log("member leave - updated partiCount : " + partiCount)
             })
             Chat.findOne({ "_id": data.chat_oid }).select("participants").exec(function (err, chat) {
                 if (err) throw err;
