@@ -20,7 +20,12 @@
 #postingIcon{z-index:10000}
 #chatIcon{z-index:10001}
 
-#contentsBox{position:relative; width:100%;} 
+#contentsBox{
+    position:relative; 
+    width:100%;
+    height: calc(100vh - 100px);
+    background: #fff;
+} 
 #postlistBox{z-index:1;}
 
 
