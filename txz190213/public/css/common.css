@@ -23,7 +23,7 @@
 #contentsBox{
     position:relative; 
     width:100%;
-    height: calc(100vh - 100px);
+    height: calc(100vh - 120px);
     background: #fff;
 } 
 #postlistBox{z-index:1;}
@@ -99,7 +99,10 @@
 
 
 /* 포스트검색결과 출력영역 postlist.js */
-#postlistBox{position:absolute; top:0; background:#fff; width:100%; display:none;min-height:350px;}
+#postlistBox{position:absolute; top:0; background:#fff; width:100%; display:none;
+    min-height:350px;
+    height:calc(100vh - 100px)
+}
 #departSpotIcon{position:absolute; top:11px; left:15px; width:15px;}
 #arriveSpotIcon{position:absolute; top:11px; left:15px; width:14px;}
 
