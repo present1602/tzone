@@ -136,6 +136,7 @@ $(function(){  //이거 안하면 jquery form 플러그인 로드 전에 아래 
                 alert('회원가입이 완료되었습니다');
                 console.log("signupform ajaxsubmit 처리 success cb - loginEjs 받아오기 성공")
                 $("#wrap").html(loginEjs);
+                $(window).scrollTop(0);
             },
             error: function(err){
                 console.log('ajax form submit err : ', err)

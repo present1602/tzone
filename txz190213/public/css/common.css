@@ -45,7 +45,7 @@
 /* 메인페이지의 맵 출력 (basic.js showCurPos함수) */
 #map{
     width:100%;
-    height:calc(100vh - 100px);
+    height:calc(100vh - 120px);
     position:relative;
     overflow:hidden; 
 }
