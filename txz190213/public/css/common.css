@@ -38,7 +38,12 @@
     padding: 5px; background: white; box-shadow:1px 1px gray; border-radius:3px;}
 
 /* 메인페이지의 맵 출력 (basic.js showCurPos함수) */
-#map{width:100%;height:300px;position:relative;overflow:hidden}
+#map{
+    width:100%;
+    height:calc(100vh - 100px);
+    position:relative;
+    overflow:hidden; 
+}
 .infoWindowBox{width:230px; padding:5px;}
 .infoWindowBox .title{font-weight:bold; display:block; font-family:"gulim"; font-size:13px;}
 .infoWindowBox .addrItem{font-size:12px;padding:5px 0}

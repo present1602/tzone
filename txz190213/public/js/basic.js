@@ -185,7 +185,7 @@ function showCurPos() {
         var marker = new daum.maps.Marker({
             position: markerPosition
         });
-        debugger;
+        
         marker.setMap(map);
         var geocoder = new daum.maps.services.Geocoder();
         geocoder.coord2Address(lng, lat, function (result, status) {
