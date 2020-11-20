@@ -71,12 +71,18 @@
                     value=<%=participant_count %>>명 참여중
                 </span>
             </p>
+            <% if( message.trim() != "" ) { %>
+            <p class="postItemInList message">
+                <span class="itemKey">메세지</span>
+                <span class="itemVal"><%=message %></span>
+            </p>
+            <% } %>
                 <!-- <span class="writerName"><%=writerName %></span>
                 <span class="writerGender"><%=writerGender %></span> -->
             <% if( participant_count == join_restrict ){ %>
                 <input type="button" class="joinButton" style="background-color: rgba(111,111,111);"value="참여불가">
             <% }else{ %>
-                <input type="button" class="joinButton" onclick="join(event)" value="참여">
+                <input type="button" class="joinButton" style="margin: 10px 0 20px;" onclick="join(event)" value="참여">
             <% } %>
     
         </div>

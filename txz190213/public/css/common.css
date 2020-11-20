@@ -167,7 +167,7 @@ tr td{vertical-align:middle}
     outline:1px solid rgba(212,212,212,1); font-size:13px; position:relative;
     font-family:'gulim'; font-weight:bold; padding:14px 0;}
 #postJoinMarker{color:green; 
-    display:inline-block;position:absolute;width:46px; font-size:14px; top:13px; left:9px;
+    display:inline-block;position:absolute;width:46px; font-size:14px; top:8px; left:9px;
     padding-top:2px;
 } 
 #postSumFromTo{padding: 0 60px 0 55px;
