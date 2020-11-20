@@ -4,9 +4,13 @@
     height:calc(100vh - 100px); overflow:scroll;
 }
 #messageInputBox{position:fixed; bottom:10px; width:100%;}
-#messageInput{height: 34px; width: 75%; border:1px solid rgba(207,207,207,1)}
+#messageInput{
+    height: 34px; width: 75%; border:1px solid rgba(207,207,207,1);
+    margin-left:5px;
+}
 #sendMessage{background-color: rgba(7,173,132,1);
-    position: absolute; top: 0; right: 10px; width: 20%; z-index: 3;
+    position: absolute; 
+    top: 0; right: 10px; width: 20%; z-index: 3;
     border: none; height: 37px; }
 .profile{width:46px;height:46px;}
 .messageListItem{position:relative; padding:8px 0}
