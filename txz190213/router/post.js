@@ -127,7 +127,7 @@ var showposts = function(req,res){
                 console.log('linkedpost Object result : ', result);
                 var query = Post.find({"_id": {$ne : result.linkedpost} });
                 query.where('dep_geometry').within({ center: [parseFloat(departLng), parseFloat(departLat)]
-                    ,radius: 2000/6371   //1/6371 : 1km    //,unique : true, spherical : true?
+                    ,radius: 500/6371   //1/6371 : 1km    //,unique : true, spherical : true?
                 }).limit(8);
                 query.where('arv_geometry').within({ center: [parseFloat(arriveLng), parseFloat(arriveLat)]
                     ,radius: 500/6371
