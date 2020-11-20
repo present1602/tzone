@@ -207,12 +207,6 @@ function showCurPos() {
     function showCurrentMap(lat, lng){
         mapContainer = document.getElementById('map') // 지도를 표시할 div 
         console.log("lat : " + lat + ", lng : " + lng);
-
-        if( !(lat > 33 && lat < 38 && lng >126 && lng < 130) ){
-            console.log("설정된 좌표 범위를 벗어났습니다");
-            lat = defaultLat;        
-            lng = defaultLng;
-        }
         
         mapOption = {
             center: new daum.maps.LatLng(lat, lng), // 지도의 중심좌표
@@ -305,6 +299,13 @@ function showCurPos() {
             console.log('pos : ' + JSON.stringify(pos));  //질문 빈객체로 나옴 아래는 출력됨
             lat = pos.coords.latitude;
             lng = pos.coords.longitude;
+
+            if( !(lat > 33 && lat < 38 && lng >126 && lng < 130) ){
+                console.log("설정된 좌표 범위를 벗어났습니다");
+                lat = defaultLat;        
+                lng = defaultLng;
+            }
+
             showCurrentMap(lat, lng);
         }, 
         currentPositionErr,
