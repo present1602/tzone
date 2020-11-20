@@ -557,7 +557,7 @@ function printPostInfoPage(post) {
     postJoinContent += '<p class="postJoinViewItem"><span class="postViewItemSpan">출발</span>' + departPlace + '</p>';
     postJoinContent += '<p class="postJoinViewItem"><span class="postViewItemSpan">도착</span>  ' + arrivePlace + '</p>';
     postJoinContent += '<p class="postJoinViewItem"><span class="postViewItemSpan">출발시간</span>  ' + departTime + '</p>';
-    postJoinContent += '<p class="postJoinViewItem"><span class="postViewItemSpan">모집인원</span><span style="font-size:1.1em; margin-left:3px;">' + joinLimit + '<span></p>';
+    postJoinContent += '<p class="postJoinViewItem"><span class="postViewItemSpan">모집인원</span><span style="font-size:1.1em; margin-left:3px;">' + joinLimit + ' 명<span></p>';
     postJoinContent += '<p class="postJoinViewItem"><span class="postViewItemSpan">메세지</span>' + message + '</p>';
     postJoinContent += '<p id="joinCancelButton" onclick="userLeave()">참여취소</p>';  //userLeave() : socket_client.js
     postJoinContent += '</div>'

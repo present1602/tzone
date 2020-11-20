@@ -188,6 +188,8 @@ tr td{vertical-align:middle}
 .postJoinViewItem{font-size:13px; font-size: 0.9rem; margin:14px 0;
     font-family:"나눔고딕", "dotum"; font-weight: bold; margin: 15px 5px; color:rgba(78,78,78,1);
     line-height: 1.7em;
+    border-bottom: 1px solid rgba(212,212,212);
+    padding-bottom: 1em;
 }
 /* .postItemName{    display: inline-block;
     width: 68px; color: rgba(119,119,119,1);} */
@@ -220,6 +222,9 @@ tr td{vertical-align:middle}
     display: inline-block;
     width: 66px;
     font-size: 1.2em;
+    border-bottom: 1px solid rgba(212,212,212);
+    margin-bottom: 1em;
+    padding: 0.5em;
 }
 .postSuccessItemTextSpan{
     font-size: 1.1em;

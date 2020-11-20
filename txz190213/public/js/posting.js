@@ -142,8 +142,8 @@ function processPosting() {
             postingSuccessContent += '<div id="postingSuccesInfoBox">'
             postingSuccessContent += '<p class="postSuccessItem"><span class="postItemSpan">출발</span><span class="postSuccessItemTextSpan">' + departPlace + '</span></p>';
             postingSuccessContent += '<p class="postSuccessItem"><span class="postItemSpan">도착</span><span class="postSuccessItemTextSpan">' + arrivePlace + '</span></p>';
-            postingSuccessContent += '<p class="postSuccessItem"><span class="postItemSpan">모집인원</span><span class="postSuccessItemTextSpan">' + joinLimit + '</span></p>';
-            postingSuccessContent += '<p class="postSuccessItem" id="postSuccessItemMessage"><span class="postItemSpan">메세지</span><span class="postSuccessItemTextSpan">' + message + '</span></p>';
+            postingSuccessContent += '<p class="postSuccessItem"><span class="postItemSpan">모집인원</span><span class="postSuccessItemTextSpan">' + joinLimit + ' 명</span></p>';
+            postingSuccessContent += '<p class="postSuccessItem"><span class="postItemSpan">메세지</span><span class="postSuccessItemTextSpan" id="postSuccessItemMessageSpan">' + message + '</span></p>';
             postingSuccessContent += '</div>'
             postingSuccessContent += '<p id="postingSuccessConfirm">확인</p>';
             postingSuccess.innerHTML = postingSuccessContent;
