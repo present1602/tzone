@@ -75,7 +75,7 @@ menubarIcon.addEventListener("click", function (e) {
 function logout() {
     
     if(localStorage.getItem('chat_on')){
-        if( confirm("로그아웃 시 참여중인 방에서 퇴장됩니다. 로그아웃하시겠습니까?") ) {
+        if( confirm("로그아웃 시 참여중인 방에서 퇴장됩니다. \n로그아웃하시겠습니까?") ) {
             var data = {"user_oid":userOid, "username":username, "post_oid":postOid, "chat_oid":chatOid};
             console.log("참여취소 - data : ", data);
             socket.emit('leave', data, function(response){
@@ -558,7 +558,7 @@ function printPostInfoPage(post) {
     postJoinContent += '<p class="postJoinViewItem"><span class="postViewItemSpan">도착</span>  ' + arrivePlace + '</p>';
     postJoinContent += '<p class="postJoinViewItem"><span class="postViewItemSpan">출발시간</span>  ' + departTime + '</p>';
     postJoinContent += '<p class="postJoinViewItem"><span class="postViewItemSpan">모집인원</span><span style="font-size:1.1em; margin-left:3px;">' + joinLimit + ' 명<span></p>';
-    postJoinContent += '<p class="postJoinViewItem"><span class="postViewItemSpan">메세지</span>' + message + '</p>';
+    postJoinContent += '<p class="postJoinViewItem"><span class="postViewItemSpan" id="postViewItemMessageSpan">메세지</span>' + message + '</p>';
     postJoinContent += '<p id="joinCancelButton" onclick="userLeave()">참여취소</p>';  //userLeave() : socket_client.js
     postJoinContent += '</div>'
 

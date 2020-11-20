@@ -216,15 +216,17 @@ tr td{vertical-align:middle}
 #postingSuccesInfoBox{ margin: 0 auto; width: 85%; text-align:left }
 #postSuccessMessage{text-align:center; height:80px; font-size:20px; font-weight:bold;text-align:center;
  color:rgba(7,173,132,1); line-height:80px;}
-.postSuccessItem{display:flex; font-size:13px; margin:6px; line-height:2.3em}
+.postSuccessItem{
+    display:flex; font-size:13px; margin:6px; line-height:2.3em;
+    border-bottom: 1px solid rgba(212,212,212);
+    margin-bottom: 1em;
+    padding: 0.5em;
+}
 .postItemSpan{
     font-weight: bold;
     display: inline-block;
     width: 66px;
     font-size: 1.2em;
-    border-bottom: 1px solid rgba(212,212,212);
-    margin-bottom: 1em;
-    padding: 0.5em;
 }
 .postSuccessItemTextSpan{
     font-size: 1.1em;
