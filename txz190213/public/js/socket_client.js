@@ -181,6 +181,17 @@ socket.on('connect', function(){ //소켓 끊어졌다 재접속돼도 chatOnId�
         
         chatlist.insertAdjacentHTML('beforeend', printMessage);
         
+        var newMessageNumber  = document.getElementById("newMessageNumber");
+        // debugger;
+
+        if(newMessageNumber.value == 0 && history.state.page != "chat"){
+            newMessageNumber.value++;
+            newMessageNumber.className += "active";
+        }else if(history.state.page != "chat"){
+            newMessageNumber.value++;
+        }
+
+
         webDB.transaction(function(tr){
             console.log("전송받은 메세지 저장 위한 transaction 콜백 실행");
             var insertSQL = 'insert into chat_history'
@@ -191,6 +202,9 @@ socket.on('connect', function(){ //소켓 끊어졌다 재접속돼도 chatOnId�
                 alert('DB오류 : ' + err.message + err.code);
             });    
         }); 
+        
+
+        
     });
 });
 

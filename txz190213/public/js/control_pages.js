@@ -17,6 +17,7 @@ $("#closeChat").click(function(e){
     $("#chatWrap").css("display", "none");
     $("#contentsBox").css("display","block"); 
     $("#chatIcon").css("display", "block");
+
     history.go(-1);    
 })
 
@@ -31,6 +32,17 @@ $("#chatIcon").click(function(e){
     console.log("#chatIcon 이벤트 리스터 실행");
     var box = document.getElementById("chatWrap")
     this.style.display="none";
+
+    var newMessageNumber  = document.getElementById("newMessageNumber");
+    // debugger;
+
+    if(newMessageNumber.value > 0){
+        newMessageNumber.value = 0;
+    }
+    if(newMessageNumber.classList.contains('active')){
+        newMessageNumber.classList.remove('active')
+    } 
+    
     openPage(box, "chat");
 });
 
