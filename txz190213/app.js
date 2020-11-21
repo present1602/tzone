@@ -18,7 +18,11 @@ const AWS = require('aws-sdk');
 
 const { v4: uuidv4 } = require('uuid');
 const configData = require('./config');
-require('dotenv/config')
+const dotenv = require('dotenv')
+// import dotenv from 'dotenv'
+
+// console.log("path.join(__dirname, '.env' : ", path.join(__dirname, '.env') );
+dotenv.config({ path: '.env' })
 
 process.env.NODE_ENV = process.env.NODE_ENV && (process.env.NODE_ENV == 'production') ? 'production' : 'development';
 
@@ -360,7 +364,7 @@ passport.use('local-signup', new LocalStrategy(
 
                 const params = {
                     'Bucket': process.env.AWS_BUCKET_NAME,
-                    'Key': filename,
+                    'Key': 'profile/' + filename,
                     'ACL': 'public-read',
                     'Body': req.files[0].buffer,
                     'ContentType': `image/${fileType}`
