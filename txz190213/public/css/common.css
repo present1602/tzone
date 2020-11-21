@@ -133,7 +133,7 @@
 
 
 
-/* 포스팅페이지  index.ejs 파일에 존재 */
+/* 포스팅페이지  .ejs 파일에 존재 */
 
 #postingForm {position: relative;margin:10px}
 .locationBoxInPosting{position: relative; width: 100%; padding-right:10px;}
@@ -207,6 +207,10 @@ tr td{vertical-align:middle}
     padding: 2% 4%;
     margin-top: 12px;
 }
+#postViewMessage{
+    display: inline-block;
+    margin: 8px;
+}
 /* ========== 포스트정보페이지 끝 =========== */
 
 
@@ -225,7 +229,7 @@ tr td{vertical-align:middle}
 .postItemSpan{
     font-weight: bold;
     display: inline-block;
-    width: 66px;
+    min-width: 67px;
     font-size: 1.2em;
 }
 .postSuccessItemTextSpan{
