@@ -151,14 +151,15 @@ function processPosting() {
             $postingSuccessWrap.append(postingSuccess);
 
             $("#postingSuccessConfirm").click(function (e) {
-                // $postingSuccessWrap.html("");
-                // $postingSuccessWrap.css("display", "none");
+                $postingSuccessWrap.html("");
+                $postingSuccessWrap.css("display", "none");
                 // // history.back();  ??
                 // // processShowPosts();
+
                 var authToken = localStorage.getItem('x-access-token');
                 if (authToken) {
                     loadIndex(authToken);
-                    socket = io();
+                    // socket = io();
 
                 } else {
                     loadLogin();
@@ -185,6 +186,7 @@ function processPosting() {
                     postOid = localStorage.getItem("post_oid");
                     chatOid = localStorage.getItem("chat_on");
 
+                    
                     // $.getScript("/js/socket_client", function() {
                     //     console.log("after create chat load getscript socket_client.js")
                     // });

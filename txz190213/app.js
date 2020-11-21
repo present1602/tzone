@@ -551,6 +551,7 @@ function socketEvents() {
 
             //(From client) var data = {"user_oid":uoid, "username":uname, "post_oid":poid, "chat_oid":coid};
             console.log('(server) get socket leave event, data : ', data)
+            socket.leave(data.chat_oid);
             socket.to(data.chat_oid).emit('member_leave', data)
 
             // Post.findOneAndUpdate({"_id": data.post_oid}, {$set:{name:"Naomi"}}, {new: true}, (err, doc) => {
@@ -560,7 +561,7 @@ function socketEvents() {
             
             //     console.log(doc);
             // });
-
+            
             Post.findOne({ "_id": data.post_oid }).select("participant_count").exec(function (err, post) {
                 if (err) throw err;
                 var partiCount = post.participant_count
