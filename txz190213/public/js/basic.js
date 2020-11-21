@@ -568,6 +568,7 @@ function printPostInfoPage(post) {
 
     $("#postViewClose").click(function (e) {
         $("#postJoinViewWrap").css("display", "none");
+        history.go(-1)
     });
 
 
