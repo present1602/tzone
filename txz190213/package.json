@@ -20,7 +20,7 @@
     "express": "^4.16.3",
     "express-session": "^1.15.6",
     "fs": "0.0.1-security",
-    "jsonwebtoken": "^8.3.0",
+    "jsonwebtoken": "^9.0.0",
     "mongoose": "^5.2.2",
     "mongoose-deep-populate": "^3.1.1",
     "morgan": "^1.9.0",
